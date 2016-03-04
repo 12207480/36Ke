@@ -30,7 +30,7 @@
     return [image stretchableImageWithLeftCapWidth:image.size.width * 0.5 topCapHeight:image.size.height * 0.5];
 }
 
-+ (UIImage *)imageByScalingToSize:(CGSize)targetSize
+- (UIImage *)imageByScalingToSize:(CGSize)targetSize
 {
     UIImage *sourceImage = self;
     UIImage *newImage = nil;

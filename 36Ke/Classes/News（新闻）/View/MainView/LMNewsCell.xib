@@ -59,6 +59,13 @@
                     <constraint firstItem="oTF-a6-OqF" firstAttribute="leading" secondItem="oVt-de-5Tl" secondAttribute="trailing" constant="8" id="zg8-qr-fOe"/>
                 </constraints>
             </tableViewCellContentView>
+            <connections>
+                <outlet property="iconImageView" destination="oVt-de-5Tl" id="h28-e8-3MF"/>
+                <outlet property="nameLabel" destination="oTF-a6-OqF" id="6YC-YV-wHj"/>
+                <outlet property="timeLabel" destination="5Rm-Xr-oop" id="OBH-OP-DQ9"/>
+                <outlet property="titleLabel" destination="NJn-sH-rlJ" id="W4i-1R-sS9"/>
+                <outlet property="typeLabel" destination="pUQ-7K-u38" id="22M-Y2-OPd"/>
+            </connections>
             <point key="canvasLocation" x="299" y="155"/>
         </tableViewCell>
     </objects>

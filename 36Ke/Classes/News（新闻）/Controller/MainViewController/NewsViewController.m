@@ -7,15 +7,21 @@
 //
 
 #import "NewsViewController.h"
+#import "HeaderListJsonHandler.h"
+#import "HeaderModel.h"
+#import "LMNewsRefreshHeader.h"
 #import <SDCycleScrollView.h>
 #import <MJRefresh.h>
-@interface NewsViewController () <SDCycleScrollViewDelegate>
+#import <MJExtension.h>
+@interface NewsViewController () <SDCycleScrollViewDelegate,HeaderListJsonHandlerDelegate,UITableViewDelegate,UITableViewDataSource>
 {
-    
+    HeaderListJsonHandler *listHandler;
+    SDCycleScrollView *_cycleScrollView;
+    CGFloat lastContentOffset;
 }
 
 @property (nonatomic, strong, readwrite) NSMutableArray *dataArray;
-@property (nonatomic, weak) UITableView *tableView;
+@property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, assign) BOOL update;
 
 @end
@@ -23,10 +29,52 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = LMJRGBColor(240, 243, 245);
-    // Do any additional setup after loading the view.
+//    _tableView.tableHeaderView = [self addHeaderView];
+    
+    [self setupUI];
+    
     [self setupNaviItem];
+    
+    [self setupHeaderRefresh];
+    
+    
+    
+    listHandler = [[HeaderListJsonHandler alloc] init];
+    listHandler.delegate = self;
+    
+    // Do any additional setup after loading the view.
+    
+   
+}
 
+
+- (void)setupUI {
+    
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.view.height - 64)];
+    
+//    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.view.height - 64) style:UITableViewStyleGrouped];
+    
+    self.tableView.backgroundColor = self.view.backgroundColor;
+    _tableView.delegate = self;
+    _tableView.dataSource = self;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0);
+    [self.view addSubview:_tableView];
+}
+
+//- (UIView *)addHeaderView {
+//    
+////    UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 180)];
+//}
+
+
+#pragma mark - HeaderListJsonHandlerDelegate
+- (void)HeaderListJsonHandler:(HeaderListJsonHandler *)handler withResult:(NSDictionary *)result {
+    
+    NSString *key = [result.keyEnumerator nextObject];
+    NSArray *temArray = result[key];
+    NSMutableArray *arrayM = [HeaderModel objectArrayWithKeyValuesArray:temArray];
+    NSLog(@"%@",arrayM);
 }
 
 - (void)setupNaviItem {
@@ -46,19 +94,26 @@
     
 }
 
-- (void)setRefresh {
-    __unsafe_unretained __typeof(self) weakSelf = self;
-    self.view.backgroundColor = [UIColor clearColor];
-    // 设置回调（一旦进入下拉刷新刷新状态就会调用这个refreshingBlock）
-    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
-        [weakSelf loadData];
-    }];
+- (void)setupHeaderRefresh {
     
+    
+    
+//    __unsafe_unretained __typeof(self) weakSelf = self;
+    self.view.backgroundColor = [UIColor whiteColor];
+    // 设置回调（一旦进入下拉刷新刷新状态就会调用这个refreshingBlock）
+    LMNewsRefreshHeader *header = [LMNewsRefreshHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadData)];
+    // 隐藏时间
+    header.lastUpdatedTimeLabel.hidden = YES;
+    // 隐藏文字
+//    header.
+    
+    // 隐藏状态
+    header.stateLabel.hidden = YES;
+    self.tableView.mj_header = header;
     // 设置回调（一旦进入上拉刷新刷新状态就会调用这个refreshingBlock）
-    self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
-        [weakSelf loadMoreData];
-    }];
-    self.update = YES;
+//    self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+//        [weakSelf loadMoreData];
+//    }];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(welcome) name:@"LMJAdvertisementKey" object:nil];
 }
 
@@ -76,41 +131,17 @@
 #pragma mark 下拉刷新
 - (void)loadData
 {
-    NSString *allUrlstring = [NSString stringWithFormat:@"/nc/article/%@/0-20.html",self.urlString];
-    [self loadDataForType:1 withURL:allUrlstring];
+    [listHandler handlerHeaderObject];
     
 }
 #pragma mark 上拉刷新
 - (void)loadMoreData
 {
-    NSString *allUrlstring = [NSString  stringWithFormat:@"/nc/article/%@/%ld-20.html",self.urlString,(self.dataArray.count - self.dataArray.count % 10)];
-    [self loadDataForType:2 withURL:allUrlstring];
+    
 }
 // ------公共方法
 - (void)loadDataForType:(int)type withURL:(NSString *)allUrlstring
 {
-//    [[LMJNetworkTools sharedNetworkTools] GET:allUrlstring parameters:nil success:^(NSURLSessionDataTask *task, NSDictionary *responseObject) {
-//        NSLog(@"LMJNewsTableViewController--!%@",allUrlstring);
-//        NSString *key = [responseObject.keyEnumerator nextObject];
-//        NSArray *tempArray = responseObject[key];
-//        //        NSLog(@"tempArray--%@",tempArray);
-//        NSMutableArray *arrayM = [T1348647853363 objectArrayWithKeyValuesArray:tempArray];
-//        //        NSLog(@"arrayM--%@",arrayM[0][@"title"]);
-//        //        for (T1348647853363 *t1348647853363 in arrayM) {
-//        //            NSLog(@"T1348647853363---%@",t1348647853363.title);
-//        //        }
-//        if (type == 1) {
-//            self.arrayList = arrayM;
-//            [self.tableView.mj_header endRefreshing];
-//            [self.tableView reloadData];
-//        } else if (type == 2) {
-//            [self.arrayList addObjectsFromArray:arrayM];
-//            [self.tableView.mj_footer endRefreshing];
-//            [self.tableView reloadData];
-//        }
-//    } failure:^(NSURLSessionDataTask *task, NSError *error) {
-//        NSLog(@"LoadDataForType,error:%@",error);
-//    }];
     
 }
 
@@ -119,20 +150,24 @@
 //
 //
 //- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    
+//    return 80.0f;
 //}
 //
 //#pragma mark - UITableViewDataSource
 //- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 //    
-//}
-//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+//    return 1;
 //    
 //}
-//
-//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    
-//}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 1;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [[UITableViewCell alloc] init];
+    
+    return cell;
+}
 
 
 
