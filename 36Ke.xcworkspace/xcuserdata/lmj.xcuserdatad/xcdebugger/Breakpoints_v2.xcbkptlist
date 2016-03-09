@@ -9,14 +9,12 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "36Ke/Classes/News&#xff08;&#x65b0;&#x95fb;&#xff09;/Controller/MainViewController/NewsViewController.m"
-            timestampString = "478714083.646141"
+            filePath = "36Ke/Classes/News&#xff08;&#x65b0;&#x95fb;&#xff09;/Model/HeaderModel.m"
+            timestampString = "478865693.199487"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "72"
-            endingLineNumber = "72"
-            landmarkName = "-HeaderListJsonHandler:withResult:"
-            landmarkType = "5">
+            startingLineNumber = "37"
+            endingLineNumber = "37">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -25,13 +23,41 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "36Ke/Classes/News&#xff08;&#x65b0;&#x95fb;&#xff09;/Controller/MainViewController/NewsViewController.m"
-            timestampString = "478714100.272232"
+            filePath = "36Ke/Classes/News&#xff08;&#x65b0;&#x95fb;&#xff09;/Model/HeaderModel.m"
+            timestampString = "478865693.199487"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "133"
-            endingLineNumber = "133"
-            landmarkName = "-loadData"
+            startingLineNumber = "40"
+            endingLineNumber = "40">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "36Ke/Classes/News&#xff08;&#x65b0;&#x95fb;&#xff09;/Model/HeaderModel.m"
+            timestampString = "478865693.199487"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "48"
+            endingLineNumber = "48">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "36Ke/Classes/HttpRequest/KeTVListJsonHandler.m"
+            timestampString = "479118741.347122"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "104"
+            endingLineNumber = "104"
+            landmarkName = "-handlerKeTVObject:type:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
