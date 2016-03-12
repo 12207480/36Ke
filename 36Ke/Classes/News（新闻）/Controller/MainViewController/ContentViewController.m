@@ -112,7 +112,7 @@ static CGFloat const kButtonHeight = 43.0f;
     [self.webView setBackgroundColor:[UIColor whiteColor]];
     self.webView.delegate=self;
 //
-    //获取htmltemp
+    // 获取htmltemp
     htmTemp=[Common readLocalString:[[NSBundle mainBundle] pathForResource:@"content_template" ofType:@"html"]];
     //toolbar
     float toolBarY = self.view.bounds.size.height - kToolBarHeight;
@@ -389,7 +389,7 @@ static CGFloat const kButtonHeight = 43.0f;
 }
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-    //获取到webview的高度
+    // 获取到webview的高度
     CGFloat height = [[self.webView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight"] floatValue];
 //    NSLog(@"height---%lf",height);
     self.webView.frame = CGRectMake(self.webView.frame.origin.x,self.webView.frame.origin.y, self.view.bounds.size.width, height );
@@ -520,22 +520,12 @@ static CGFloat const kButtonHeight = 43.0f;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.section == 3) {
-        LMCommentViewController *commentVC = [[LMCommentViewController alloc] init];
-        [commentVC initChildData:_chilData commentCount:_commentArray.count];
-        //    [self.navigationController setNavigationBarHidden:YES animated:YES];
-        LMNavigationController *naviVC = [[LMNavigationController alloc] initWithRootViewController:commentVC];
-        //    [self.navigationController pushViewController:commentVC animated:YES];
-        [self presentViewController:naviVC animated:YES completion:nil];
+        [self skipController];
     }
     
     
     if (indexPath.section == 4) {
-        LMCommentViewController *commentVC = [[LMCommentViewController alloc] init];
-        [commentVC initChildData:_chilData commentCount:_commentArray.count];
-        //    [self.navigationController setNavigationBarHidden:YES animated:YES];
-        LMNavigationController *naviVC = [[LMNavigationController alloc] initWithRootViewController:commentVC];
-        //    [self.navigationController pushViewController:commentVC animated:YES];
-        [self presentViewController:naviVC animated:YES completion:nil];
+        [self skipController];
     }
 ////    ChildData *dataChild = self.newsArray[indexPath.row];
 //    ContentViewController *contentVC = [[ContentViewController alloc] init];
@@ -543,7 +533,15 @@ static CGFloat const kButtonHeight = 43.0f;
 //    [self presentViewController:contentVC animated:YES completion:nil];
 }
 
+- (void)skipController {
+    LMCommentViewController *commentVC = [[LMCommentViewController alloc] init];
+    [commentVC initChildData:_chilData commentCount:_commentArray.count];
+    //    [self.navigationController setNavigationBarHidden:YES animated:YES];
+    LMNavigationController *naviVC = [[LMNavigationController alloc] initWithRootViewController:commentVC];
+    //    [self.navigationController pushViewController:commentVC animated:YES];
+    [self presentViewController:naviVC animated:YES completion:nil];
 
+}
 
 
 
