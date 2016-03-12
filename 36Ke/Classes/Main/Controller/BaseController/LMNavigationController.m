@@ -8,7 +8,7 @@
 
 #import "LMNavigationController.h"
 #import "UIViewController+REFrostedViewController.h"
-
+#import "REFrostedViewController.h"
 @interface LMNavigationController ()
 
 @end
@@ -18,6 +18,21 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+
+    
+}
+
+
+- (void)showMenu
+{
+    // Dismiss keyboard (optional)
+    //
+    [self.view endEditing:YES];
+    [self.frostedViewController.view endEditing:YES];
+    
+    // Present the view controller
+    //
+    [self.frostedViewController presentMenuViewController];
 }
 
 + (void)initialize {

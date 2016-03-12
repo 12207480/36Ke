@@ -10,4 +10,7 @@
 
 @interface LMTabBarController : UITabBarController
 
+
+- (instancetype)initColumn:(NSString *)column title:(NSString *)title;
+
 @end

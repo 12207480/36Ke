@@ -9,11 +9,14 @@
 #import "LMTabBarController.h"
 #import "LMNavigationController.h"
 #import "NewsViewController.h"
-
+#import "KeTVViewController.h"
 @interface LMTabBarController ()
 
 @property (nonatomic, strong) NewsViewController *newsViewController;
 
+@property (nonatomic, strong) NSString * column;
+
+@property (nonatomic, strong) NSString *naviItemtitle;
 
 @end
 
@@ -25,10 +28,20 @@
     
 }
 
-- (void)addAllChildVC {
-    NewsViewController *newsVC = [[NewsViewController alloc] init];
-//    UIImage *image = [UIImage imageNamed:@"tabbar_icon_news"];
+- (instancetype)initColumn:(NSString *)column title:(NSString *)title {
+    _column = column;
+    _naviItemtitle = title;
+    if (self = [super init]) {
+        
+    }
     
+    return self;
+}
+
+
+- (void)addAllChildVC {
+    NewsViewController *newsVC = [[NewsViewController alloc] initColumn:_column title:_naviItemtitle];
+//    UIImage *image = [UIImage imageNamed:@"tabbar_icon_news"];    
     [self addChildVC:newsVC title:@"新闻" imageName:@"tabbar_icon_news_meitu_1-1"];
     _newsViewController = newsVC;
     

@@ -22,7 +22,7 @@
 
 @protocol HeaderListJsonHandlerDelegate <NSObject>
 
-- (void)HeaderListJsonHandler:(HeaderListJsonHandler *)handler withResult:(NSDictionary *)result;
+- (void)HeaderListJsonHandler:(HeaderListJsonHandler *)handler withResult:(NSMutableArray *)result;
 
 
 @end

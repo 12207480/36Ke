@@ -11,14 +11,14 @@
 
 @implementation HttpTool
 
-+(void)get:(NSString *)url params:(NSDictionary *)params success:(void (^)(id))success failure:(void (^)(NSError *))failure
++ (void)get:(NSString *)url params:(NSDictionary *)params success:(void (^)(id))success failure:(void (^)(NSError *))failure
 {
     // 1.获得请求管理者
     AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
     
     // 2.发送GET请求
     [mgr GET:url parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"responseObject--%@",responseObject);
+//        NSLog(@"responseObject--%@",responseObject);
         if (success){
             success(responseObject);
         }

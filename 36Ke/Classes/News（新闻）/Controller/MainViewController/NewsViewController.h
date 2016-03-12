@@ -12,5 +12,5 @@
 
 @property (nonatomic, copy) NSString *urlString;
 //@property (nonatomic)
-
+- (instancetype)initColumn:(NSString *)column title:(NSString *)title;
 @end

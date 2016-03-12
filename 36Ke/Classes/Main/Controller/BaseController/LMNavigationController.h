@@ -10,6 +10,6 @@
 
 @interface LMNavigationController : UINavigationController
 
-//- (void);
+- (void)showMenu;
 
 @end

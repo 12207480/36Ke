@@ -10,6 +10,8 @@
 #import "NewfeatureViewController.h"
 #import "NewsViewController.h"
 #import "LMTabBarController.h"
+#import "REFrostedViewController.h"
+#import "LMMenuViewController.h"
 @interface AppDelegate ()
 
 @end
@@ -27,11 +29,20 @@
     [self.window makeKeyAndVisible];
     
     // 3.设置窗口的根控制器
-    LMTabBarController *tabBar = [[LMTabBarController alloc] init];
+    LMTabBarController *tabBar = [[LMTabBarController alloc] initColumn:@"all" title:@"新闻"];
     NewsViewController *news = [[NewsViewController alloc] init];
     NewfeatureViewController *newfeature = [[NewfeatureViewController alloc] init];
+    LMMenuViewController *menuController = [[LMMenuViewController alloc] initWithStyle:UITableViewStylePlain];
+    
     UINavigationController *navi = [[UINavigationController alloc] initWithRootViewController:news];
-    self.window.rootViewController = tabBar;
+    REFrostedViewController *frostedViewController = [[REFrostedViewController alloc] initWithContentViewController:tabBar menuViewController:menuController];
+    frostedViewController.direction = REFrostedViewControllerDirectionLeft;
+    frostedViewController.liveBlurBackgroundStyle = REFrostedViewControllerLiveBackgroundStyleLight;
+    frostedViewController.liveBlur = YES;
+//    frostedViewController.delegate = self;
+    
+    
+    self.window.rootViewController = frostedViewController;
     
     return YES;
 }

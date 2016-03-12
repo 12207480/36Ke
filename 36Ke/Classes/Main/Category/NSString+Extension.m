@@ -21,15 +21,15 @@
     return destDateString;
 }
 
-- (id)JSONValue
-{
-    NSError *error = nil;
-    
-    id obj = [NSJSONSerialization JSONObjectWithData:[self dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:&error];
-    if (error)
-        NSLog(@"%@", [error description]);
-    return obj;
-}
+//- (id)JSONValue
+//{
+//    NSError *error = nil;
+//    
+//    id obj = [NSJSONSerialization JSONObjectWithData:[self dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:&error];
+//    if (error)
+//        NSLog(@"%@", [error description]);
+//    return obj;
+//}
 
 
 @end

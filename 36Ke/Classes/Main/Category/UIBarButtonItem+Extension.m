@@ -59,9 +59,13 @@
 
 + (UIBarButtonItem *)initWithTitle:(NSString *)title titleColor:(UIColor *)titleColor target:(id)target action:(SEL)action
 {
+    
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.frame = CGRectMake(0, 0, 40, 40);
+    button.frame = CGRectMake(0, 0, 55, 30);
+//    [button setImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
+    [button setFont:[UIFont systemFontOfSize:13]];
     [button setTitle:title forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     [button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
     return [[UIBarButtonItem alloc] initWithCustomView:button];
 }
