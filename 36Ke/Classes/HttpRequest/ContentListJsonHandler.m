@@ -20,10 +20,10 @@
     [HttpTool get:allUrl params:nil success:^(id responseObj) {
         
         NSDictionary *dic = responseObj[@"data"];
-        NSDictionary *userDic = dic[@"user"];
+//        NSDictionary *userDic = dic[@"user"];
         
-        NSArray *keysArray = [dic allKeys];
-        NSArray *userKeys = [userDic allKeys];
+//        NSArray *keysArray = [dic allKeys];
+//        NSArray *userKeys = [userDic allKeys];
         
         
         ContentData *dataModel = [ContentData mj_objectWithKeyValues:dic];

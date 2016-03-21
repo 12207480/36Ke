@@ -12,4 +12,6 @@
 
 + (NSString *)stringFromDate:(NSDate *)date;
 
++ (NSData *)toJSONData:(id)theData;
+
 @end

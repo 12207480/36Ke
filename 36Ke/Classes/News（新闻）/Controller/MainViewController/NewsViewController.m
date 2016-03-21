@@ -16,28 +16,32 @@
 #import "LMNavigationController.h"
 #import "NewsListJsonHandler.h"
 #import "LMNewsCell.h"
-#import "KeTVCell.h"
-#import "KeTVModel.h"
 #import "ContentViewController.h"
 #import "Common.h"
 #import <MJExtension.h>
 #import "NewsModel.h"
-#import "KeTVModel.h"
-#import "JSON.h"
+
+#import "PicsViewController.h"
+#import "LMPicNavigationController.h"
+
+#import "LMSearchViewController.h"
+
+#define kDeviceVersion [[UIDevice currentDevice].systemVersion floatValue]
+#define kNavbarHeight ((kDeviceVersion>=7.0)? 64 :44 )
+#define kIOS7DELTA   ((kDeviceVersion>=7.0)? 20 :0 )
+#define kTabBarHeight 49
+
 @interface NewsViewController () <SDCycleScrollViewDelegate,HeaderListJsonHandlerDelegate,NewsListJsonHandlerDelegate,UITableViewDelegate,UITableViewDataSource>
 {
     HeaderListJsonHandler *listHandler;
     NewsListJsonHandler *newsHandler;
     SDCycleScrollView *_cycleScrollView;
- 
-    
 }
 
 @property (nonatomic, strong, readwrite) NSMutableArray *dataArray;
 @property (nonatomic, strong, readwrite) NSMutableArray *newsArray;
 
 @property (nonatomic, strong) ChildData *childData;
-@property (nonatomic, strong) KeTVData2 *ketvData2;
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, assign) BOOL update;
@@ -45,8 +49,6 @@
 @property (nonatomic, assign) NSString *lastId;
 @property (nonatomic, strong) NSString *column;
 @property (nonatomic, strong) NSString *titleItem;
-
-//@property (nonatomic, strong)
 
 
 @end
@@ -56,7 +58,6 @@
     _column = column;
     _titleItem = title;
     if (self = [super init]) {
-//        self.navigationItem.title = title;
         
     }
     return self;
@@ -64,6 +65,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
     self.update = YES;
     listHandler = [[HeaderListJsonHandler alloc] init];
     listHandler.delegate = self;
@@ -76,35 +78,22 @@
     [self setupHeaderRefresh];
     
     [self cacheHistory];
-    
-    
-    
-//    _tableView.tableHeaderView = [self addHeaderView];
-    
-    
-    
-    // Do any additional setup after loading the view.
-    
-    
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(welcome) name:@"LMJAdvertisementKey" object:nil];
-    //    self.tableView.headerHidden = NO;
 
-   
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-//    if (![[NSUserDefaults standardUserDefaults]boolForKey:@"update"]) {
-//        return;
-//    }
-    //    NSLog(@"bbbb");
+    
+    [super viewWillAppear:animated];
+
     if (self.update == YES) {
         [self.tableView.mj_header beginRefreshing];
         self.update = NO;
     }
-    
-//    [[NSNotificationCenter defaultCenter]postNotification:[NSNotification notificationWithName:@"contentStart" object:nil]];
 }
+
+
+
 
 - (void)cacheHistory {
     
@@ -135,33 +124,16 @@
     [NSJSONSerialization JSONObjectWithData: [history dataUsingEncoding:NSUTF8StringEncoding]
                                     options: NSJSONReadingMutableContainers
                                       error: &error];
-//    NSLog(@"%@",array);
-    
-//    NSData *data = [history dataUsingEncoding:NSUTF8StringEncoding];
-//    NSArray *data2arry = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    
-//    NSDictionary *dic=[Common readLocalString:path];
-    
-//    NSLog(@"dic---%@",dic[@"data"]);
-//    NSLog(@"history---%@",history);
-//    NSLog(@"hist--%@",[history JSONValue]);
-//    NSMutableArray *resultarray = [[NSMutableArray alloc] init];
-//    [resultarray addObject:history];
+
     if (history.length>0) {
+        
+        
+        
         _update = NO;
-        if ([_column hasPrefix:@"tv"]) {
-            self.newsArray = [KeTVData2 mj_objectArrayWithKeyValuesArray:array];
-            KeTVData2 *ketvData = self.newsArray.lastObject;
-            _lastId = ketvData.tv.id;
-        } else {
-            self.newsArray = [ChildData mj_objectArrayWithKeyValuesArray:array];
-            ChildData *dataChild = self.newsArray.lastObject;
-            _lastId = dataChild.feedId;
-        }
-        NSLog(@"%@",_newsArray);
+        self.newsArray = [ChildData mj_objectArrayWithKeyValuesArray:array];
+        ChildData *dataChild = self.newsArray.lastObject;
+        _lastId = dataChild.feedId;
         [self.tableView reloadData];
-        //获得所有分类数据
-        //   NSLog(@"listData---%@",self.listData);
     }
     
 
@@ -172,13 +144,10 @@
     
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.view.height - 64)];
     
-//    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.view.height - 64) style:UITableViewStyleGrouped];
-    
     self.tableView.backgroundColor = self.view.backgroundColor;
     _tableView.delegate = self;
     _tableView.dataSource = self;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-//    self.tableView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0);
     [self.view addSubview:_tableView];
 }
 
@@ -198,32 +167,25 @@
     _cycleScrollView = [SDCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 0, self.view.width, 180) imageURLStringsGroup:nil];
     
     _cycleScrollView.infiniteLoop = YES;
-    
-//    _cycleScrollView.autoScroll = NO;
+//    _cycleScrollView
+    _cycleScrollView.pageControlAliment = SDCycleScrollViewPageContolAlimentRight;
     _cycleScrollView.delegate = self;
-//    _cycleScrollView.placeholderImage=[UIImage imageNamed:@"homepagebannerplaceholder"];
     _cycleScrollView.pageControlStyle = SDCycleScrollViewPageContolStyleClassic;
     _cycleScrollView.autoScrollTimeInterval = 3.5; // 轮播时间间隔，默认1.0秒，可自定义
     
-    
-    //模拟加载延迟
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        _cycleScrollView.imageURLStringsGroup = imagesURLStrings;
-//    });
+    _cycleScrollView.imageURLStringsGroup = imagesURLStrings;
+
     
     [header addSubview:_cycleScrollView];
     
     
     return header;
-    
-//    UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 180)];
+
 }
 
 
 #pragma mark - HeaderListJsonHandlerDelegate
 - (void)HeaderListJsonHandler:(HeaderListJsonHandler *)handler withResult:(NSMutableArray *)result {
-   
-//    NSString *path=[k_DocumentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"/cach_%d.txt",currentCategory.PRKID]];
     
     _dataArray = [NSMutableArray arrayWithArray:result];
     
@@ -234,11 +196,7 @@
         [self.tableView.mj_footer endRefreshing];
         return;
     }
-    
-//    NSString *key = [result.keyEnumerator nextObject];
-//    NSArray *temArray = result[key];
-//    NSMutableArray *arrayM = [HeaderModel objectArrayWithKeyValuesArray:temArray];
-//    NSLog(@"%@",arrayM);
+
 }
 
 
@@ -251,40 +209,16 @@
         return;
     }
     
-    if ([_column hasPrefix:@"tv"]) {
-        _ketvData2  = result.lastObject;
-        _lastId = _ketvData2.tv.id;
-//        self.navigationController.title = _ketvData2.columnName;
-    } else {
         
-        _childData = result.lastObject;
-        _lastId = _childData.feedId;
-//        self.navigationController.title = _childData.columnName;
-    }
-//    _lastId = _childData.feedId;
+    _childData = result.lastObject;
+    _lastId = _childData.feedId;
     if (type == 1) {
-//        NSString *writeString = [NSString stringWithFormat:@"%@",self.newsArray];
-//        NSLog(@"writeString---%@",writeString);
-//        /** 缓存newsArray,整个分类的数据都存入其中，我可以通过传入的column来判断文件名称是哪种数据
-//          *  如果是全部，那么我命令文件可以是all,其他分类，可以通过传入的column命名，
-//             缓存文件只存当时第一次传入的数据，读取数据也是一样的
-//          */
-//        NSString *path=[k_DocumentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"/cach_%@.txt",_column]];
-//        [Common writeString:writeString toPath:path];
-        
-        
         self.newsArray = result;
-        
-        
-//        NSString *writeString = [NSString stringWithFormat:@"%@",self.newsArray];
-//        NSLog(@"writeString---%@",writeString);
-        
         [self.tableView.mj_header endRefreshing];
         [self.tableView reloadData];
     }else if(type == 2){
         [self.newsArray addObjectsFromArray:result];
         [self.tableView.mj_footer endRefreshing];
-//        [self.tableView footerEndRefreshing];
         [self.tableView reloadData];
     }
     
@@ -297,8 +231,6 @@
 
 - (void)setupNaviItem {
     
-//    // 设置背景
-//    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@""] forBarMetrics:UIBarMetricsCompact];
     self.navigationItem.leftBarButtonItem = [UIBarButtonItem initWithNormalImage:@"common_nav_icon_navigation"  target:(LMNavigationController *)self.navigationController action:@selector(showMenu)];
     
     
@@ -309,8 +241,13 @@
     
 }
 
+
+
 - (void)commonSearch {
-    
+    LMSearchViewController *searchVC = [[LMSearchViewController alloc] init];
+    [self.navigationController pushViewController:searchVC animated:YES];
+//    [self.navigationController setNavigationBarHidden:NO animated:YES];
+//    [self presentViewController:searchVC animated:YES completion:nil];
 }
 
 - (void)setupHeaderRefresh {
@@ -331,17 +268,9 @@
     self.tableView.mj_header = header;
     // 设置回调（一旦进入上拉刷新刷新状态就会调用这个refreshingBlock）
     MJRefreshBackStateFooter *footer = [MJRefreshBackStateFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
-//    [footer setTitle:@"" forState:MJRefreshStateRefreshing];
-//    [footer setTitle:@"" forState:MJRefreshStatePulling];
+
     [footer setTitle:@"" forState:MJRefreshStateIdle];
     self.tableView.mj_footer = footer;
-//    [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
-////        MJRefreshBackStateFooter *footerSatae = [[MJRefreshBackStateFooter alloc] init];
-////        [footerSatae setTitle:@"" forState:MJRefreshStateIdle];
-////        [footerSatae setTitle:@"" forState:MJRefreshStateRefreshing];
-//        [weakSelf loadMoreData];
-//    }];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(welcome) name:@"LMJAdvertisementKey" object:nil];
 }
 
 - (void)setUrlString:(NSString *)urlString
@@ -349,11 +278,7 @@
     _urlString = urlString;
 }
 
-//- (void)welcome
-//{
-//    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"update"];
-//    [self.tableView.mj_header beginRefreshing];
-//}
+
 #pragma mark -－ 刷新数据
 #pragma mark 下拉刷新
 - (void)loadData
@@ -364,18 +289,8 @@
     } else {
         allUrlstring = [NSString stringWithFormat:@"https://rong.36kr.com/api/mobi/news?columnId=%@",_column];
     }
-//    allUrlstring = [NSString stringWithFormat:@"https://rong.36kr.com/api/mobi/news?"];
     [self loadDataForType:1  column:_column  withURL:allUrlstring];
-//    switch (_column) {
-//        case 0:
-//            [listHandler handlerHeaderObject];
-//            [newsHandler handlerNewsObject:allUrlstring column:]
-//            self.navigationItem.title = @"新闻";
-//            break;
-//            
-//        default:
-//            break;
-//    }
+
 }
 #pragma mark 上拉刷新
 - (void)loadMoreData
@@ -387,9 +302,6 @@
     if ([_column isEqualToString:@"all"]) {
         allUrlstring = [NSString stringWithFormat:@"https://rong.36kr.com/api/mobi/news?lastId=%@",_lastId];
     }
-//    } else if ([_column hasPrefix:@"tv"]) {
-//        allUrlstring = [NSString stringWithFormat:@"https://rong.36kr.com/api/mobi/news?lastId=%@",_lastId];
-//    }
     else {
         allUrlstring = [NSString stringWithFormat:@"https://rong.36kr.com/api/mobi/news?columnId=%@&lastId=%@",_column,_lastId];
     }
@@ -401,10 +313,9 @@
 - (void)loadDataForType:(int)type column:(NSString *)column withURL:(NSString *)allUrlstring
 {
     if ([column isEqualToString:@"all"]) {
-//        self.navigationItem.title = @"新闻";
         [listHandler handlerHeaderObject];
     }
-//     self.navigationItem.title  = _childData.columnName;
+
     
     [newsHandler handlerNewsObject:allUrlstring type:type column:column];
 
@@ -432,22 +343,14 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+    ChildData *childModel = self.newsArray[indexPath.row];
     
-    if ([_column hasPrefix:@"tv"]) {
-        KeTVData2 *ketvModel = self.newsArray[indexPath.row];
-        KeTVCell *cell = [KeTVCell cellWithTableView:tableView model:ketvModel];
-        
-        return cell;
-    } else {
+    LMNewsCell * cell = [LMNewsCell cellWithTableView:tableView model:childModel];
+    cell.selectionStyle = UITableViewCellSelectionStyleGray;
     
-        ChildData *childModel = self.newsArray[indexPath.row];
+    return cell;
     
-        LMNewsCell * cell = [LMNewsCell cellWithTableView:tableView model:childModel];
-        cell.selectionStyle = UITableViewCellSelectionStyleGray;
-//    cell.chi = NewsModel;
-    
-        return cell;
-    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -456,24 +359,45 @@
         return;
         
     }
-    
-    
-    
     ChildData *dataChild = self.newsArray[indexPath.row];
     ContentViewController *contentVC = [[ContentViewController alloc] init];
     [contentVC setChilData:dataChild];
     [contentVC setHidesBottomBarWhenPushed:YES];//加上这句就可以把推出的ViewController隐藏Tabbar
     [self.navigationController setNavigationBarHidden:YES animated:YES];
-    
-    
-//    [contentVC sethide]
+
     [self.navigationController pushViewController:contentVC animated:YES];
-    
-//    [self presentViewController:contentVC animated:YES completion:nil];
-    
+
     [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
     
 }
+
+#pragma mark - SDCycleScrollViewDelegate
+
+- (void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didSelectItemAtIndex:(NSInteger)index
+{
+    Pics *picModel = self.dataArray[index];
+//    PicsViewController *picsVC = [[PicsViewController alloc] initWithNibName:@"PicsViewController" bundle:nil];
+    PicsViewController *picsVC = [[PicsViewController alloc] init];
+    [picsVC setPicModel:picModel];
+//    [contentVC setHidesBottomBarWhenPushed:YES];//加上这句就可以把推出的ViewController隐藏Tabbar
+//    [self.navigationController setNavigationBarHidden:YES animated:YES];
+    LMPicNavigationController *naviVC = [[LMPicNavigationController alloc] initWithRootViewController:picsVC];
+    
+//    [self.navigationController pushViewController:naviVC animated:YES];
+//    [self addChildViewController:naviVC];
+//    [naviVC pushViewController:picsVC animated:YES];
+//    [naviVC pushViewController:picsVC animated:YES];
+    [self presentViewController:naviVC animated:YES completion:nil];
+}
+
+/**
+ 解决办法，在presentModalViewController的时候加上UINavigationController，就可以了，如下:
+ 
+ [objc] view plain copy 在CODE上查看代码片派生到我的代码片
+ LoginViewController *login = [[LoginViewController alloc]init];
+ UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:login];
+ [self.navigationController presentModalViewController:nav animated:YES];
+ */
 
 
 @end

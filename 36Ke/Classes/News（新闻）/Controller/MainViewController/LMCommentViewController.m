@@ -15,6 +15,7 @@
 @interface LMCommentViewController () <CommentListJsonHandlerDelegate,UITableViewDelegate,UITableViewDataSource>
 {
     CommentListJsonHandler *commentHandler;
+    CGFloat heightLabel;
 }
 
 
@@ -43,10 +44,6 @@
     _dataChild = dataChild;
     _lastId = _dataChild.feedId;
     
-//    if (self = [super init]) {
-//        
-//    }
-//    return self;
 }
 
 - (void)viewDidLoad {
@@ -65,17 +62,11 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     
-//    self.navigationItem.title = @"12345";
-    
-    //    if (![[NSUserDefaults standardUserDefaults]boolForKey:@"update"]) {
-    //        return;
-    //    }
-    //    NSLog(@"bbbb");
     if (self.update == YES) {
         [self.tableView.mj_header beginRefreshing];
         self.update = NO;
     }
-    //    [[NSNotificationCenter defaultCenter]postNotification:[NSNotification notificationWithName:@"contentStart" object:nil]];
+
 }
 
 
@@ -83,31 +74,20 @@
     
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.view.height - 64)];
     
-    //    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.view.height - 64) style:UITableViewStyleGrouped];
     
     self.tableView.backgroundColor = [UIColor whiteColor];
-//    self.tableView.backgroundColor = self.view.backgroundColor;
     _tableView.delegate = self;
     _tableView.dataSource = self;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    //    self.tableView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0);
     [self.view addSubview:_tableView];
 }
 
 - (void)setupNaviItem {
     NSString *comment = [NSString stringWithFormat:@"%ld条记录",_commentCount];
     self.navigationItem.title = comment;
-//    LMNavigationController *naviVC = [[LMNavigationController alloc] init];
-    
-//    naviVC.title = @"123";
-//    self.navigationItem.title = @"back2";
-    //    // 设置背景
-    //    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@""] forBarMetrics:UIBarMetricsCompact];
     self.navigationItem.leftBarButtonItem = [UIBarButtonItem initWithNormalImage:@"common_nav_icon_back"  target:self action:@selector(back)];
     self.navigationItem.rightBarButtonItem = [UIBarButtonItem initWithTitle:@"写评论" titleColor:nil target:self action:@selector(writeComment)];
     
-//    self.navigationItem.rightBarButtonItem = [UIBarButtonItem initWithNormalImage:@"common_nav_icon_back"  target:self action:@selector(back)];
-//    self.navigationItem.title = comment;
     
 }
 
@@ -122,11 +102,6 @@
 
 
 - (void)setupHeaderRefresh {
-    
-    
-    
-    //    __unsafe_unretained __typeof(self) weakSelf = self;
-    //    self.view.backgroundColor = [UIColor whiteColor];
     // 设置回调（一旦进入下拉刷新刷新状态就会调用这个refreshingBlock）
     LMNewsRefreshHeader *header = [LMNewsRefreshHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadData)];
     // 隐藏时间
@@ -139,17 +114,8 @@
     self.tableView.mj_header = header;
     // 设置回调（一旦进入上拉刷新刷新状态就会调用这个refreshingBlock）
     MJRefreshBackStateFooter *footer = [MJRefreshBackStateFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
-    //    [footer setTitle:@"" forState:MJRefreshStateRefreshing];
-    //    [footer setTitle:@"" forState:MJRefreshStatePulling];
     [footer setTitle:@"" forState:MJRefreshStateIdle];
     self.tableView.mj_footer = footer;
-    //    [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
-    ////        MJRefreshBackStateFooter *footerSatae = [[MJRefreshBackStateFooter alloc] init];
-    ////        [footerSatae setTitle:@"" forState:MJRefreshStateIdle];
-    ////        [footerSatae setTitle:@"" forState:MJRefreshStateRefreshing];
-    //        [weakSelf loadMoreData];
-    //    }];
-    //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(welcome) name:@"LMJAdvertisementKey" object:nil];
 }
 
 
@@ -159,23 +125,7 @@
 {
     NSLog(@"_lastId----%@",_lastId);
     NSString *allUrlstring = [NSString stringWithFormat:@"https://rong.36kr.com/api/mobi/news/comments/%@",_lastId];
-    //    if (_column == nil) {
-    //        allUrlstring = [NSString stringWithFormat:@"https://rong.36kr.com/api/mobi/news"];
-    //    } else {
-    //        allUrlstring = [NSString stringWithFormat:@"https://rong.36kr.com/api/mobi/news?columnId=%@",_column];
-    //    }
-    //    allUrlstring = [NSString stringWithFormat:@"https://rong.36kr.com/api/mobi/news?"];
     [self loadDataForType:1   withURL:allUrlstring];
-    //    switch (_column) {
-    //        case 0:
-    //            [listHandler handlerHeaderObject];
-    //            [newsHandler handlerNewsObject:allUrlstring column:]
-    //            self.navigationItem.title = @"新闻";
-    //            break;
-    //
-    //        default:
-    //            break;
-    //    }
 }
 #pragma mark 上拉刷新
 - (void)loadMoreData
@@ -188,10 +138,7 @@
 // ------公共方法
 - (void)loadDataForType:(int)type  withURL:(NSString *)allUrlstring
 {
-    
     [commentHandler handlerCommentObject:allUrlstring  type:type];
-    //    [commentHandler handlerCommentObject:allUrlstring childData:_dataChild  type:type];
-    
 }
 
 
@@ -226,15 +173,13 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    CommentData2 *dataComment = _commentArray[indexPath.row];
-    
-    CommentCell *commentCell = [CommentCell cellWithTableView:tableView model:dataComment];
-    CGSize size = [commentCell.content systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-    //    NSLog(@"size---%lf",size.height);
-    //    NSLog(@"CGRectGetMaxY(commentCell.content.frame) ---%lf",CGRectGetMaxY(commentCell.content.frame));
-    return CGRectGetMaxY(commentCell.content.frame) + size.height   + 40;
+    return heightLabel;
 }
-
+/** 预估行高，这个方法可以减少上面方法的调用次数，提高性能 */
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    return 126;
+}
 #pragma mark - UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
@@ -248,35 +193,13 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     CommentData2 *dataComment = _commentArray[indexPath.row];
-    CommentCell *commentCell = [CommentCell cellWithTableView:tableView model:dataComment];
-    commentCell.selectionStyle = UITableViewCellSelectionStyleGray;
+    CommentCell *commentCell = [CommentCell cellWithTableView:tableView];
+    commentCell.model = dataComment;
+    /* 忽略点击效果 */
+    [commentCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+    // 获得事先计算好的高度
+    heightLabel =  commentCell.heightLabel;
     return commentCell;
 }
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    //    if ([indexPath row]==self.newsArray.count)
-    //    {
-    //        return;
-    //
-    //    }
-    //    ChildData *dataChild = self.newsArray[indexPath.row];
-    //    ContentViewController *contentVC = [[ContentViewController alloc] init];
-    //    [contentVC setChilData:dataChild];
-    //
-    //    [self presentViewController:contentVC animated:YES completion:nil];
-    //
-    //    [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
-    
-}
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
 
 @end

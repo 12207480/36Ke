@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
     </dependencies>
     <objects>
@@ -32,12 +33,6 @@
                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YOs-jy-52M">
-                            <rect key="frame" x="343" y="19" width="16" height="18"/>
-                            <state key="normal" backgroundImage="dropdown_menu_triangle">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                        </button>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="common_label_zuozhe" translatesAutoresizingMaskIntoConstraints="NO" id="WFq-Ld-mwW">
                             <rect key="frame" x="105" y="4" width="27" height="15"/>
                             <constraints>
@@ -49,6 +44,15 @@
                             <rect key="frame" x="0.0" y="53" width="375" height="1"/>
                             <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="calibratedRGB"/>
                         </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YOs-jy-52M">
+                            <rect key="frame" x="343" y="19" width="16" height="18"/>
+                            <state key="normal" backgroundImage="dropdown_menu_triangle">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="nextClick:" destination="iN0-l3-epB" eventType="touchUpInside" id="Fbi-Sw-hJA"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <constraints>
                         <constraint firstItem="3jj-Wz-FZs" firstAttribute="top" secondItem="Wv7-Mx-f4s" secondAttribute="top" constant="4" id="3YQ-cg-uE9"/>
@@ -87,9 +91,10 @@
             <connections>
                 <outlet property="avatar" destination="3jj-Wz-FZs" id="Rgv-r9-v9r"/>
                 <outlet property="name" destination="m1y-wV-kTo" id="ow5-al-Lis"/>
+                <outlet property="nextClick" destination="YOs-jy-52M" id="YcJ-CL-8Zq"/>
                 <outlet property="summary" destination="AD9-Gb-2HE" id="qbQ-XZ-fCx"/>
             </connections>
-            <point key="canvasLocation" x="404.5" y="-37.5"/>
+            <point key="canvasLocation" x="292.5" y="-42.5"/>
         </view>
     </objects>
     <resources>

@@ -20,14 +20,13 @@
 #import "NewCommentCell.h"
 #import "LMNavigationController.h"
 #import "UIBarButtonItem+Badge.h"
+#import "AuthorListJsonHandler.h"
 #define kToolBarHeight 44
 #define kTopHeight 44
 #define kNavigationBarHeigh 44.0f
 
-static CGFloat const kButtonWidth = 43.0f;
-static CGFloat const kButtonHeight = 43.0f;
 
-@interface ContentViewController () <UITableViewDelegate,UITableViewDataSource,UIWebViewDelegate,ContentListJsonHandlerDelegate,CommentListJsonHandlerDelegate>
+@interface ContentViewController () <UITableViewDelegate,UITableViewDataSource,UIWebViewDelegate,ContentListJsonHandlerDelegate,CommentListJsonHandlerDelegate,ContentTopCellDelegate,AuthorListJsonHandlerDelegate>
 {
     
     UIActivityIndicatorView *actView;
@@ -39,13 +38,16 @@ static CGFloat const kButtonHeight = 43.0f;
     UIButton *favBtn;
     BOOL isFav;
     BOOL isFirstLoad;//解决web黑色
-    
+    CGFloat heightLabel;
     ContentListJsonHandler *contentHandler;
     CommentListJsonHandler *commentHandler;
-    
+    AuthorListJsonHandler *authorHandler;
 }
 @property (nonatomic, strong) UIWebView *webView;
 @property (nonatomic, strong, readwrite) NSArray *commentArray;
+
+@property (nonatomic, strong, readwrite) NSMutableArray *authorArray;;
+
 @property (nonatomic, strong) ContentData *contentModel;
 @property (nonatomic, strong) NSMutableArray *userArray;
 @property (nonatomic, strong) UITableView *tableView;
@@ -57,44 +59,25 @@ static CGFloat const kButtonHeight = 43.0f;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-//    _numberLabel = [[UILabel alloc] init];
-    
-//    if ([self respondsToSelector:@selector(setAutomaticallyAdjustsScrollViewInsets:)]) {
-//        self.automaticallyAdjustsScrollViewInsets=NO;
-//    }
     contentHandler = [[ContentListJsonHandler alloc] init];
     contentHandler.delegate = self;
     commentHandler = [[CommentListJsonHandler alloc] init];
     commentHandler.delegate = self;
-    
+    authorHandler = [[AuthorListJsonHandler alloc] init];
+    authorHandler.delegate = self;
     
     
     isFirstLoad=YES;
-//    if ([self respondsToSelector:@selector(setAutomaticallyAdjustsScrollViewInsets:)]) {
-        self.automaticallyAdjustsScrollViewInsets=NO;
-//    }
+    self.automaticallyAdjustsScrollViewInsets=NO;
+
     [self.view setBackgroundColor:[UIColor whiteColor]];
-//
-    //webview
     float webViewHeith = self.view.bounds.size.height - kToolBarHeight - kTopHeight;
     if (![Common isIOS7]) {
-//        webViewHeith-=kNavigationBarHeigh;
-        //        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav_detail_bg.png"] forBarMetrics:UIBarMetricsDefault];
     }
-//    float webViewY = kTopHeight;
-//    if (![Common isIOS7]) {
-//        webViewHeith-=k_navigationBarHeigh;
-//        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav_detail_bg.png"] forBarMetrics:UIBarMetricsDefault];
-//    }
+
     self.webView=[[UIWebView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,webViewHeith) ];
     _webView.scrollView.scrollEnabled = NO;
-//    _webView.scrollView.bounces= NO;
-    
-//    _webView.ve = NO;
-//    _webView.showsVerticalScrollIndicator = NO;
     if ([Common isIOS7]) {
-//        self.webView.scrollView.contentInset=UIEdgeInsetsMake(20+kNavigationBarHeigh, 0, 0, 0);
-//        self.webView.scrollView.scrollIndicatorInsets=UIEdgeInsetsMake(20+kNavigationBarHeigh   , 0, 0, 0);
     }
     else
     {
@@ -133,15 +116,10 @@ static CGFloat const kButtonHeight = 43.0f;
 - (void)setupUI {
     
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.view.height - 60)];
-//    self.tableView.contentOffset = CGPointMake(0, 0);
     self.tableView.bounces= NO;
-    //    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.view.height - 64) style:UITableViewStyleGrouped];
     
     self.tableView.backgroundColor = self.view.backgroundColor;
-//    _tableView.delegate = self;
-//    _tableView.dataSource = self;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    //    self.tableView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0);
     [self.view addSubview:_tableView];
 }
 
@@ -191,54 +169,29 @@ static CGFloat const kButtonHeight = 43.0f;
     [commentBtn addTarget:self action:@selector(showComment) forControlEvents:UIControlEventTouchUpInside];
     [commentBtn setFrame:CGRectMake(0, 0, 30, 30)];
     [commentBtn setBackgroundImage:commentImage forState:UIControlStateNormal];
-//    [commentBtn setImageEdgeInsets:UIEdgeInsetsMake(0.0f,(kButtonHeight- commentImage.size.width), 0.0f, 0.0f)];
-//    [commentBtn addSubview:self.numberLabel];
-//    UILabel *commentCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, 5, 5)];
-//    UIBarButtonItem *commentItem2 = [[UIBarButtonItem alloc] initWithImage:commentImage
-//                                                                       style:UIBarButtonItemStylePlain
-//                                                                      target:self
-//                                                                      action:@selector(showComment)];
-//    [commentItem2 initwit]
-//    [commentItem2 badgeValue] = @"123";
-//    commentItem2.badgeValue = @"1";
-//    commentItem2.badgeBGColor = [UIColor orangeColor];
-//    [commentBtn setBackgroundImage:btnBg forState:UIControlStateNormal];
+
     UIBarButtonItem *commentItem=[[UIBarButtonItem alloc] initWithCustomView:commentBtn];
     if (_isComment) {
         commentItem.badgeValue = [NSString stringWithFormat:@"%ld",_commentArray.count];
         commentItem.badgeBGColor = [UIColor clearColor];
         commentItem.badgeTextColor = [UIColor blueColor];
     }
-//    commentItem.title = @"123";
-//    self.navigationItem.rightBarButtonItem=right;
-
-    
-//    UIBarButtonItem *test = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"news_toolbar_icon_comment"] style:UIBarButtonItemStylePlain target:self action:nil];
-//    uibarbuttonitem
-    
-    //blank
     UIBarButtonItem *blank=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     [toolBar setItems:[NSArray arrayWithObjects:backItem,blank,commentItem,blank,favItem,blank,shareItem, nil]];
 }
 
 - (void)handleFav {
     if (isFav) {
-//        if([[DBManager share] delPostFromFavorites:[self.postObj.ID stringValue]])
-//        {
-            isFav=!isFav;
-//            [SVProgressHUD showSuccessWithStatus:@"移除收藏成功"];
-            NSString *favBtnBg=isFav?@"news_toolbar_icon_favorite_blue":@"news_toolbar_icon_favorite";
-            [favBtn setBackgroundImage:[UIImage imageNamed:favBtnBg] forState:UIControlStateNormal];
-//        }
+        isFav=!isFav;
+        NSString *favBtnBg=isFav?@"news_toolbar_icon_favorite_blue":@"news_toolbar_icon_favorite";
+        [favBtn setBackgroundImage:[UIImage imageNamed:favBtnBg] forState:UIControlStateNormal];
     }
     else
     {
-//        if ([[DBManager share] insertPostToFavorites:self.postObj]) {
-            isFav=!isFav;
-//            [SVProgressHUD showSuccessWithStatus:@"收藏成功"];
-            NSString *favBtnBg=isFav?@"news_toolbar_icon_favorite_blue":@"news_toolbar_icon_favorite";
-            [favBtn setBackgroundImage:[UIImage imageNamed:favBtnBg] forState:UIControlStateNormal];
-//        }
+        isFav=!isFav;
+        NSString *favBtnBg=isFav?@"news_toolbar_icon_favorite_blue":@"news_toolbar_icon_favorite";
+        [favBtn setBackgroundImage:[UIImage imageNamed:favBtnBg] forState:UIControlStateNormal];
+
     }
 
 }
@@ -256,45 +209,9 @@ static CGFloat const kButtonHeight = 43.0f;
 - (void)showComment {
     LMCommentViewController *commentVC = [[LMCommentViewController alloc] init];
     [commentVC initChildData:_chilData commentCount:_commentArray.count];
-//    [self.navigationController setNavigationBarHidden:YES animated:YES];
     LMNavigationController *naviVC = [[LMNavigationController alloc] initWithRootViewController:commentVC];
-//    [self.navigationController pushViewController:commentVC animated:YES];
-    [self presentViewController:naviVC animated:YES completion:nil];
-    
-    //    [contentVC sethide]
-//    [self.navigationController pushViewController:commentVC animated:YES];
 
-//    navi.navigationItem.leftBarButtonItem = [UIBarButtonItem initWithNormalImage:@"common_nav_icon_back"  target:self action:@selector(back)];
-//    navi.navigationItem.rightBarButtonItem = [UIBarButtonItem initWithTitle:@"写评论" titleColor:nil target:self action:@selector(writeComment)];
-    
-//    [navi navigationController._navigationItem.left]
-//    [commentVC initChildData:_chilData];
-//    CommentViewController *commentVC2= [[CommentViewController alloc] initChildData:_chilData];
-//    [commentVC initChildData:_chilData];
-//    commentVC
-//    KeTVViewController *ketv = [[KeTVViewController alloc] init];
-    
-//    UINavigationController *navi = [[UINavigationController alloc] init];
-    
-//    navi.navigationItem.title = [NSString stringWithFormat:@"%ld条评论",_commentArray.count];
-//    navi.navigationItem.leftBarButtonItem = [UIBarButtonItem initWithNormalImage:@"common_nav_icon_back"  target:self action:@selector(back)];
-//    navi.navigationItem.rightBarButtonItem = [UIBarButtonItem initWithTitle:@"写评论" titleColor:nil target:self action:@selector(writeComment)];
-//    [navi pushViewController:commentVC animated:YES];
-    //    self.navigationItem.title = comment;
-    
-    
-//    ContentViewController *contentVC = [[ContentViewController alloc] init];
-//    [contentVC setChilData:dataChild];
-//    [contentVC setHidesBottomBarWhenPushed:YES];//加上这句就可以把推出的ViewController隐藏Tabbar
-//    [self.navigationController setNavigationBarHidden:YES animated:YES];
-    
-    
-    //    [contentVC sethide]
-//    [navi.navigationController pushViewController:commentVC animated:YES];
-    
-//    [self.navigationController pushViewController:commentVC animated:YES];
-    
-//    [self presentViewController:commentVC animated:YES completion:nil];
+    [self presentViewController:naviVC animated:YES completion:nil];
 
 }
 
@@ -344,6 +261,8 @@ static CGFloat const kButtonHeight = 43.0f;
     
     [commentHandler handlerCommentObject:@"https://rong.36kr.com/api/mobi/news/comments" childData:chilData];
     
+    [authorHandler handlerAuthorObject:@"https://rong.36kr.com/api/mobi/news/%@/author-region" childData:chilData];
+    
 }
 
 
@@ -377,6 +296,10 @@ static CGFloat const kButtonHeight = 43.0f;
     
 }
 
+#pragma mark - AuthorListJsonHandlerDelegate
+- (void)AuthorListJsonHandler:(AuthorListJsonHandler *)handler withResult:(NSMutableArray *)result {
+    _authorArray = [NSMutableArray arrayWithArray:result];
+}
 
 #pragma -
 #pragma scrollview delegate
@@ -407,7 +330,7 @@ static CGFloat const kButtonHeight = 43.0f;
 
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    NSLog(@"heightForRowAtIndexPath---%ld",indexPath.row);
+    NSLog(@"indexPath.section ---%ld",indexPath.section);
     if (indexPath.section == 0) {
         return 50.0f;
     } else if (indexPath.section == 1) {
@@ -416,14 +339,9 @@ static CGFloat const kButtonHeight = 43.0f;
         if (_commentArray.count == 0) {
             return 1.0f;
         }
-//        CommentCell *cell = [tableView dequeueReusableCellWithIdentifier:ID]
-        CommentData2 *dataComment = _commentArray[indexPath.row];
-       
-        CommentCell *commentCell = [CommentCell cellWithTableView:tableView model:dataComment];
-        CGSize size = [commentCell.content systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-        NSLog(@"size---%lf",size.height);
-         NSLog(@"CGRectGetMaxY(commentCell.content.frame) ---%lf",CGRectGetMaxY(commentCell.content.frame));
-        return CGRectGetMaxY(commentCell.content.frame) + size.height   + 40;
+        // 获得事先计算好的高度，可以减少一次计算
+        NSLog(@"heightfor---%lf",heightLabel);
+        return heightLabel;
         
     } else if (indexPath.section == 2) {
         if (_commentArray.count == 0) {
@@ -434,7 +352,11 @@ static CGFloat const kButtonHeight = 43.0f;
     return 50.0f;
 //    return 90.0f;
 }
-
+/** 预估行高，这个方法可以减少上面方法的调用次数，提高性能 */
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    return 126;
+}
 #pragma mark - UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
@@ -472,14 +394,13 @@ static CGFloat const kButtonHeight = 43.0f;
         }
         return cell;
     } else if (indexPath.section == 3){
-//        UITableViewCell *cell = [[UITableView alloc] init];
-//        
-//        return cell;
-//        NSLog(@"indexPath.row---%ld",(long)indexPath.row);
         CommentData2 *dataComment = _commentArray[indexPath.row];
-        CommentCell *commentCell = [CommentCell cellWithTableView:tableView model:dataComment];
+        CommentCell *commentCell = [CommentCell cellWithTableView:tableView];
+        commentCell.model = dataComment;
         /* 忽略点击效果 */
         [commentCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        // 获得事先计算好的高度
+        heightLabel =  commentCell.heightLabel;
         return commentCell;
 
     } else if (indexPath.section == 2) {
@@ -527,22 +448,21 @@ static CGFloat const kButtonHeight = 43.0f;
     if (indexPath.section == 4) {
         [self skipController];
     }
-////    ChildData *dataChild = self.newsArray[indexPath.row];
-//    ContentViewController *contentVC = [[ContentViewController alloc] init];
-//    [contentVC setChilData:dataChild];
-//    [self presentViewController:contentVC animated:YES completion:nil];
 }
 
 - (void)skipController {
     LMCommentViewController *commentVC = [[LMCommentViewController alloc] init];
     [commentVC initChildData:_chilData commentCount:_commentArray.count];
-    //    [self.navigationController setNavigationBarHidden:YES animated:YES];
     LMNavigationController *naviVC = [[LMNavigationController alloc] initWithRootViewController:commentVC];
-    //    [self.navigationController pushViewController:commentVC animated:YES];
     [self presentViewController:naviVC animated:YES completion:nil];
 
 }
 
-
+#pragma mark - ContentTopCellDelegate
+// cell被点击
+- (void)nextContentInformation:(ContentData *)model {
+    
+    
+}
 
 @end

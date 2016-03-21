@@ -14,6 +14,8 @@
 
 @property (nonatomic, strong) NewsViewController *newsViewController;
 
+@property (nonatomic, strong) KeTVViewController *ketvViewController;
+
 @property (nonatomic, strong) NSString * column;
 
 @property (nonatomic, strong) NSString *naviItemtitle;
@@ -40,10 +42,17 @@
 
 
 - (void)addAllChildVC {
-    NewsViewController *newsVC = [[NewsViewController alloc] initColumn:_column title:_naviItemtitle];
-//    UIImage *image = [UIImage imageNamed:@"tabbar_icon_news"];    
-    [self addChildVC:newsVC title:@"新闻" imageName:@"tabbar_icon_news_meitu_1-1"];
-    _newsViewController = newsVC;
+    if ([_column isEqualToString:@"tv"]) {
+        KeTVViewController *ketvVC = [[KeTVViewController alloc] initColumn:_column title:_naviItemtitle];
+        [self addChildVC:ketvVC title:@"新闻" imageName:@"tabbar_icon_news_meitu_1-1"];
+        _ketvViewController = ketvVC;
+    } else {
+        NewsViewController *newsVC = [[NewsViewController alloc] initColumn:_column title:_naviItemtitle];
+        //    UIImage *image = [UIImage imageNamed:@"tabbar_icon_news"];
+        [self addChildVC:newsVC title:@"新闻" imageName:@"tabbar_icon_news_meitu_1-1"];
+        _newsViewController = newsVC;
+    }
+    
     
 
 }

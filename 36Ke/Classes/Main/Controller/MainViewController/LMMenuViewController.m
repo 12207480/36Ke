@@ -10,7 +10,7 @@
 #import "UIViewController+REFrostedViewController.h"
 #import "REFrostedViewController.h"
 #import "LMTabBarController.h"
-
+#import "MenuViewCell.h"
 
 @interface LMMenuViewController ()
 
@@ -169,21 +169,11 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *cellIdentifier = @"Cell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-    }
-    
-    if (indexPath.section == 0) {
-        NSArray *titles = @[@"全部", @"早期项目", @"B轮后",@"大公司", @"资本", @"深度",@"研究",@"氪TV"];
-        cell.textLabel.text = titles[indexPath.row];
-        //        if (indexPath.row) {
-        //            cell.imageView.image = [UIImage imageNamed:@""];
-        //        }
-    }
+
+    NSArray *titles = @[@"全部", @"早期项目", @"B轮后",@"大公司", @"资本", @"深度",@"研究",@"氪TV"];
+    NSArray *viewColor = @[@"#000000",@"#52AC41",@"#47B1E7",@"#2B88F5",@"#0045CA",@"#D6253A",@"#DF7515",@"#D62846"];
+    MenuViewCell *cell = [MenuViewCell cellWithTableView:tableView viewColor:viewColor[indexPath.row] nameLabel:titles[indexPath.row]];
+//    cell.textLabel.text = titles[indexPath.row];
     
     return cell;
 }

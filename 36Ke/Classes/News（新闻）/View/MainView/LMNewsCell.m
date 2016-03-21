@@ -54,19 +54,19 @@
     cell.nameLabel.text = model.user.name;
     cell.typeLabel.text = model.columnName;
     if ([model.columnId isEqualToString:@"67"]) {
-        cell.typeLabel.textColor = [UIColor greenColor];
+        cell.typeLabel.textColor = [Common translateHexStringToColor:@"#52AC41"];
     } else if ([model.columnId isEqualToString:@"68"]){
-        cell.typeLabel.textColor = [UIColor cyanColor];
+        cell.typeLabel.textColor = [Common translateHexStringToColor:@"#47B1E7"];
     } else if ([model.columnId isEqualToString:@"69"]){
-        cell.typeLabel.textColor = [Common translateHexStringToColor:@"#"];
+        cell.typeLabel.textColor = [Common translateHexStringToColor:@"#2B88F5"];
     } else if ([model.columnId isEqualToString:@"23"]){
-        cell.typeLabel.textColor = [Common translateHexStringToColor:@"#"];
+        cell.typeLabel.textColor = [Common translateHexStringToColor:@"#0045CA"];
     } else if ([model.columnId isEqualToString:@"69"]){
-        cell.typeLabel.textColor = [Common translateHexStringToColor:@"#"];
+        cell.typeLabel.textColor = [Common translateHexStringToColor:@"#D8263A"];
     } else if ([model.columnId isEqualToString:@"70"]){
-        cell.typeLabel.textColor = [Common translateHexStringToColor:@"#"];
+        cell.typeLabel.textColor = [Common translateHexStringToColor:@"#D8263A"];
     } else if ([model.columnId isEqualToString:@"71"]){
-        cell.typeLabel.textColor = [Common translateHexStringToColor:@"#"];
+        cell.typeLabel.textColor = [Common translateHexStringToColor:@"#E27615"];
     }
 
 

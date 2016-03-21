@@ -10,6 +10,8 @@
 #import "NewsModel.h"
 @interface LMNewsCell : UITableViewCell
 
+
+
 @property (nonatomic, strong) ChildData *childModel;
 
 + (instancetype)cellWithTableView:(UITableView *)tableView model:(ChildData *)model;

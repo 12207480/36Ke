@@ -10,10 +10,7 @@
 #import <UIImageView+WebCache.h>
 @interface KeTVCell ()
 
-@property (weak, nonatomic) IBOutlet UIImageView *featureImg;
-@property (weak, nonatomic) IBOutlet UILabel *duration;
 
-@property (weak, nonatomic) IBOutlet UILabel *title;
 
 @end
 
@@ -22,9 +19,14 @@
 
 - (void)awakeFromNib {
     
-//    self.backgroundColor = [UIColor whiteColor];
+    self.backgroundColor = [UIColor whiteColor];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 }
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+}
+
+
 
 + (instancetype)cellWithTableView:(UITableView *)tableView model:(KeTVData2 *)model {
     
@@ -34,15 +36,11 @@
     if (cell == nil) {
         cell = [[[NSBundle mainBundle] loadNibNamed:NSStringFromClass([KeTVCell class]) owner:nil options:nil] lastObject];
     }
-    [cell.featureImg sd_setImageWithURL:[NSURL URLWithString:model.tv.featureImg]];
-    //    [cell.iconImageView sd_setImageWithURL:[NSURL URLWithString:model..data.featureImg]];
+    [cell.backgroundIV sd_setImageWithURL:[NSURL URLWithString:model.tv.featureImg]];
+
     cell.duration.text = model.tv.duration;
    
-    
-    
-//    cell.title.text = [NSDate stringFromDate:confromTimesp];
     cell.title.text = model.tv.title;
-//    cell.typeLabel.text = model.columnName;
     
     return cell;
 }

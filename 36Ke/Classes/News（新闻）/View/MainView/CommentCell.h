@@ -10,8 +10,10 @@
 #import "CommentModel.h"
 @interface CommentCell : UITableViewCell
 
-@property (nonatomic, strong) CommentData2 *childModel;
+@property (nonatomic, strong) CommentData2 *model;
+@property (nonatomic, assign) CGFloat heightLabel;
 @property (weak, nonatomic) IBOutlet UILabel *content;
-+ (instancetype)cellWithTableView:(UITableView *)tableView model:(CommentData2 *)model;
++ (instancetype)cellWithTableView:(UITableView *)tableView;
+
 
 @end

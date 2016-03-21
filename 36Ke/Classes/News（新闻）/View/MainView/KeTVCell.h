@@ -10,9 +10,18 @@
 #import "KeTVModel.h"
 @interface KeTVCell : UITableViewCell
 
-@property (nonatomic, strong) KeTVData2 *keTVModel;
+@property (weak, nonatomic) IBOutlet UIImageView *backgroundIV;
+
+@property (weak, nonatomic) IBOutlet UIImageView *featureImg;
+@property (weak, nonatomic) IBOutlet UILabel *duration;
+
+@property (weak, nonatomic) IBOutlet UILabel *title;
+@property (weak, nonatomic) IBOutlet UIButton *playBtn;
+
+@property (nonatomic, strong) KeTVData2 *model222;
 
 + (instancetype)cellWithTableView:(UITableView *)tableView model:(KeTVData2 *)model;
+
 
 
 @end

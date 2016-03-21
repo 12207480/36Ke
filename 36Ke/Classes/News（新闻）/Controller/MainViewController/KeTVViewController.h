@@ -10,4 +10,7 @@
 
 @interface KeTVViewController : UIViewController
 
+//@property (nonatomic)
+- (instancetype)initColumn:(NSString *)column title:(NSString *)title;
+
 @end

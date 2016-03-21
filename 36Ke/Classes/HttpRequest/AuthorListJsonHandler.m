@@ -15,7 +15,7 @@
 
 - (void)handlerAuthorObject:(NSString *)url childData:(ChildData *)childData {
     
-    NSString *allUrl = [NSString stringWithFormat:@"%@/%@",url,childData.feedId];
+    NSString *allUrl = [NSString stringWithFormat:@"%@",childData.feedId];
     
     [HttpTool get:allUrl params:nil success:^(id responseObj) {
         

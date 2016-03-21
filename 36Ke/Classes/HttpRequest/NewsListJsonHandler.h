@@ -17,7 +17,7 @@
 
 - (void)handlerNewsObject:(NSString *)url type:(int)type column:(NSString *)column;
 
-//- (void)handlerKeTVObject:(NSString *)url type:(int)type;
+- (void)handlerKeTVObject:(NSString *)url type:(int)type column:(NSString *)column;
 
 
 @property (nonatomic, weak) id<NewsListJsonHandlerDelegate> delegate;

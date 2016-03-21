@@ -12,7 +12,7 @@
 #import <MJExtension.h>
 #import "KeTVModel.h"
 #import "Common.h"
-#import "JSON.h"
+#import "NSDate+Extension.h"
 @implementation NewsListJsonHandler
 
 
@@ -37,7 +37,7 @@
         
         
         NSArray *array =  dic[@"data"];
-        NSData *tempData = [self toJSONData:dic[@"data"]];
+        NSData *tempData = [NSDate toJSONData:dic[@"data"]];
         NSString *jsonString = [[NSString alloc] initWithData:tempData
                                                      encoding:NSUTF8StringEncoding];
 //        NSLog(@"array---%@",array);
@@ -69,45 +69,39 @@
     }];
 }
 
-- (NSData *)toJSONData:(id)theData{
-    
-    NSError *error = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:theData
-                                                       options:NSJSONWritingPrettyPrinted
-                                                         error:&error];
-    
-    if ([jsonData length] > 0 && error == nil){
-        return jsonData;
-    }else{
-        return nil;
-    }
+- (void)handlerKeTVObject:(NSString *)url type:(int)type column:(NSString *)column {
+    // https://rong.36kr.com/api/mobi/news?columnId=67
+    [HttpTool get:url params:nil success:^(id responseObj) {
+        
+        //        NSString *writeString = [NSString stringWithFormat:@"%@",responseObj];
+        /** 缓存newsArray,整个分类的数据都存入其中，我可以通过传入的column来判断文件名称是哪种数据
+         *  如果是全部，那么我命令文件可以是all,其他分类，可以通过传入的column命名，
+         缓存文件只存当时第一次传入的数据，读取数据也是一样的
+         */
+        
+        
+        
+        NSDictionary *dic = responseObj[@"data"];
+        NSArray *array =  dic[@"data"];
+        NSData *tempData = [NSDate toJSONData:dic[@"data"]];
+        NSString *jsonString = [[NSString alloc] initWithData:tempData
+                                                     encoding:NSUTF8StringEncoding];
+        
+        NSString *path=[k_DocumentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"/cach_%@.txt",column]];
+        [Common writeString:jsonString toPath:path];
+        NSMutableArray *resultArray = [KeTVData2 mj_objectArrayWithKeyValuesArray:array];
+
+        if (self.delegate) {
+            [self.delegate NewsListJsonHandler:self withResult:resultArray type:type];
+        }
+        
+        //        NSLog(@"%@",responseObj);
+    } failure:^(NSError *error) {
+        if (self.delegate) {
+            [self.delegate NewsListJsonHandlerError:self error:1];
+        }
+    }];
 }
-
-
-//- (void)handlerNewsObject:(NSString *)url type:(int)type {
-//    // https://rong.36kr.com/api/mobi/news?columnId=67
-//    [HttpTool get:url params:nil success:^(id responseObj) {
-//        
-//        NSDictionary *dic = responseObj[@"data"];
-//        
-//        NSArray *array =  dic[@"data"];
-//        
-//        
-//        
-//        NSMutableArray *resultArray = [KeTv mj_objectArrayWithKeyValuesArray:array];
-//        
-//        if (self.delegate) {
-//            [self.delegate NewsListJsonHandler:self withResult:resultArray type:type];
-//        }
-//        
-//        NSLog(@"%@",responseObj);
-//    } failure:^(NSError *error) {
-//        
-//    }];
-//    
-//    
-//}
-
 
 
 @end
