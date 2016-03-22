@@ -1,5 +1,5 @@
 # 36Ke
-一款仿36氪iOS版APP（正在更新） <br/>
+一款仿36氪iOS版APP（正在更新）lmj->林名君（在校学生）  <br/>
 所有的数据都是通过Charles抓包工具获取到的,  图片通过Extractor解压得到（部分图片找不到），视频播放器是通过36氪开源播放器（采用View+MPMoviePlayerViewController）改进的播放器使用的是View + AVPlayer，支持播放mp4、mov等格式，网络和本地视频同时支持,支持Cell中全屏和小屏自动感应旋转屏幕，参考WMPlayer。<br/>
 视频播放器github地址：<a>https://github.com/lingtingSir/LMVideoPlayer</a> <br/>
 文章博客介绍：<a>http://www.jianshu.com/p/0ccf4ea14e79</a> <br/>
