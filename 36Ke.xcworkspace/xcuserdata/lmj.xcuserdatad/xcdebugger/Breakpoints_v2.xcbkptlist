@@ -147,13 +147,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "36Ke/Classes/Vender/LMVideoPlayer/LMVideoPlay/LMVideoPlayerOperationView.m"
-            timestampString = "480097057.937723"
+            filePath = "36Ke/Classes/Main/Controller/MainViewController/LMSearchViewController.m"
+            timestampString = "480270548.760947"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "443"
-            endingLineNumber = "443"
-            landmarkName = "-initTimer"
+            startingLineNumber = "417"
+            endingLineNumber = "417"
+            landmarkName = "-tableView:didSelectRowAtIndexPath:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

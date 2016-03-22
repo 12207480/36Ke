@@ -22,7 +22,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
 @property (nonatomic, assign) CGRect originFrame;
 @property (nonatomic, retain) NSDateFormatter *dateFormatter;
 @property (nonatomic, assign) double currentTimes;
-
+@property (nonatomic, assign) double timeTemp;
 /**
  *  定时器
  */
@@ -52,21 +52,15 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
         self.frame = frame;
         self.backgroundColor = [UIColor grayColor];
         self.videoControl.frame = frame;
-        self.videoControl.playOrPauseBtn.selected = YES;
+        self.videoControl.playOrPauseBtn.selected = NO;
         [self addSubview:self.videoControl];
         [self configAvplayer:videoURLString];
-        
         [self configControlAction];
-        
-        
     }
     return self;
 }
 -(void)layoutSubviews{
     [super layoutSubviews];
-    
-//    self.layer.bounds = CGRectMake(0, 0, self.bounds.size.width, self.self.bounds.size.height);
-    
     self.playerLayer.frame = self.layer.bounds;
 }
 
@@ -95,17 +89,17 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
                        forKeyPath:@"status"
                           options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
                           context:PlayViewStatusObservationContext];
-//    [self initTimer];
-    
-    
+}
+
+- (void)currentItemEndPause {
     
 }
+
 
 - (void)dismiss
 {
     [self deallocPlayer];
     [self stopDurationTimer];
-//    [self stop];
     [UIView animateWithDuration:kVideoPlayerControllerAnimationTimeInterval animations:^{
         self.alpha = 0.0;
     } completion:^(BOOL finished) {
@@ -124,15 +118,9 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [self.player pause];
-//    [self removeFromSuperview];
-//    self.autoDismissTimer = nil;
     self.player = nil;
-//    self.currentItem = nil;
+
     [self.autoDismissTimer invalidate];
-//    self.autoDismissTimer = nil;
-//    [self.durationTimer invalidate];
-//    self.durationTimer = nil;
-////    self = nil;
     [self.currentItem removeObserver:self forKeyPath:@"status"];
 }
 
@@ -155,15 +143,12 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
 - (void)playButtonClick
 {
     [self startDurationTimer];
+    self.videoControl.playOrPauseBtn.selected = !self.videoControl.playOrPauseBtn.selected;
     if (self.player.rate != 1.f) {
         [self play];
     } else {
         [self pause];
     }
-    
-    
-//    [self play];
-//    self.videoControl.pauseButton.hidden = NO;
 }
 
 
@@ -239,9 +224,6 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
         
         self.videoControl.playOrPauseBtn.selected = YES;
         [self dismiss];
-        //播放完成后的通知
-//        [[NSNotificationCenter defaultCenter] postNotificationName:LMPlayerFinishedPlayNotification object:self.durationTimer];
-//        [self stopDurationTimer];
         self.durationTimer = nil;
     }
     
@@ -313,13 +295,11 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
         if ([self currentTime] == [self duration]){
             [self setCurrentTime:0.f];
         }
-        self.videoControl.playOrPauseBtn.selected = !self.videoControl.playOrPauseBtn.selected;
         [self.player play];
     }
 }
 -(void)pause{
     if (self.player.rate !=0.f) {
-        self.videoControl.playOrPauseBtn.selected = !self.videoControl.playOrPauseBtn.selected;
         [self.player pause];
     }
 }
@@ -346,11 +326,8 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
             case AVPlayerStatusUnknown:
             {
                 [self setupAutoDismissTimer:0.0];
-//                self.videoControl.playOrPauseBtn.selected = !self.videoControl.playOrPauseBtn.selected;
-//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [self.videoControl.indicatorView startAnimating];
-//                });
-                
+
+                [self.videoControl.indicatorView startAnimating];
             }
                 break;
                 
@@ -364,7 +341,6 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
                     self.videoControl.progressSlider.maximumValue = CMTimeGetSeconds(self.player.currentItem.duration);
                 }
                 [self.videoControl.indicatorView stopAnimating];
-//                [self.videoControl]
                 [self initTimer];
                 [self startDurationTimer];
                 
@@ -377,7 +353,6 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
                 
             case AVPlayerStatusFailed:
             {
-//                self.videoControl.playOrPauseBtn.selected = self.viedeo
                 [self setupAutoDismissTimer:0.0];
                 [self.videoControl.indicatorView startAnimating];
             }
@@ -461,9 +436,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     __weak typeof(self) weakSelf = self;
     
     CMTime playerDuration = [self playerItemDuration];
-    
-    
-//    NSLog(@"syncScrubber--%lld",playerDuration.value);
+
     if (CMTIME_IS_INVALID(playerDuration)){
         weakSelf.videoControl.progressSlider.minimumValue = 0.0;
         return;
@@ -474,10 +447,26 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
         float minValue = [weakSelf.videoControl.progressSlider minimumValue];
         float maxValue = [weakSelf.videoControl.progressSlider maximumValue];
         double time = CMTimeGetSeconds([weakSelf.player currentTime]);
+        _timeTemp = time;
         [self setTimeLabelValues:time totalTime:duration];
         [weakSelf.videoControl.progressSlider setValue:(maxValue - minValue) * time / duration + minValue];
-        // 重要测试，这里可以解决网速慢加载卡顿的问题
-   //     NSLog(@"time--%lf",time);
+        // 解决网速慢的问题
+        dispatch_queue_t queue = dispatch_queue_create("cachePlay", DISPATCH_QUEUE_CONCURRENT);
+        dispatch_async(queue, ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if (_timeTemp == time) {
+                
+                    [self.videoControl.indicatorView startAnimating];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(7 * NSEC_PER_SEC)), queue, ^{
+                        [self.videoControl.indicatorView stopAnimating];
+                        [self play];
+                    });
+                    
+                }
+            });
+        });
+    
+
     }
 }
 
@@ -504,7 +493,6 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
         singleTap.numberOfTapsRequired = 1; // 单击
         [self addGestureRecognizer:singleTap];
     }
-    
     //放widow上
     [self removeFromSuperview];
     [UIView animateWithDuration:0.5f animations:^{
@@ -512,42 +500,44 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
         self.frame = CGRectMake(kScreenWidth/2,kScreenHeight-kTabBarHeight-(kScreenWidth/2)*0.75, kScreenWidth/2, (kScreenWidth/2)*0.75);
         self.playerLayer.frame =  self.bounds;
         self.videoControl.frame = self.bounds;
-//        self.videoControl.hidden = YES;
-//        [self sendSubviewToBack:self.videoControl];
         [[UIApplication sharedApplication].keyWindow addSubview:self];
         
     }completion:^(BOOL finished) {
-        //        wmPlayer.isFullscreen = NO;
-//        [self setNeedsStatusBarAppearanceUpdate];
-        //        wmPlayer.fullScreenBtn.selected = NO;
         self.isFullscreenMode = NO;
         self.isSmallScreen = YES;
         [[UIApplication sharedApplication].keyWindow bringSubviewToFront:self];
     }];
 }
 
-#pragma mark
+#pragma mark 为了达到app上的效果，暂时先这样
 #pragma mark - 单击手势方法
 - (void)handleSingleTap{
     // 跳到大屏幕后，移除自身小屏幕的手势，添加大屏幕的手势
     if (self.isSmallScreen) {
         [self fullScreenButtonClick];
     }
-//    for (UIGestureRecognizer *recognizer in self.gestureRecognizers) {
-//        [self removeGestureRecognizer:recognizer];
-//    }
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self.videoControl action:@selector(onTap:)];
     [self.videoControl addGestureRecognizer:tapGesture];
     
     
 }
 
-//#pragma mark
-//#pragma mark - 单击手势方法
-//- (void)handleSingleTap{
-//    self.videoControl.hidden = NO;
-//    [self fullScreenButtonClick];
-//}
+- (void)toCell:(UITableViewCell *)cell{
+    [self removeFromSuperview];
+    [UIView animateWithDuration:0.5f animations:^{
+        self.transform = CGAffineTransformIdentity;
+        self.frame = cell.bounds;
+        self.playerLayer.frame =  cell.bounds;
+        self.videoControl.frame = cell.bounds;
+        [cell addSubview:self];
+        [cell bringSubviewToFront:self];
+    }completion:^(BOOL finished) {
+        self.isFullscreenMode = NO;
+        self.isSmallScreen = NO;
+        
+    }];
+}
+
 
 
 @end

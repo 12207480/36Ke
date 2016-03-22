@@ -10,9 +10,10 @@
 #import "TokenTool.h"
 #import "SearchListJsonHandler.h"
 #import "SearchModel.h"
+#import "SearchViewCell.h"
 #define fontCOLOR [UIColor colorWithRed:163/255.0f green:163/255.0f blue:163/255.0f alpha:1]
 
-@interface LMSearchViewController ()  <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate,SearchListJsonHandlerDelegate>
+@interface LMSearchViewController ()  <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate,SearchListJsonHandlerDelegate,UIGestureRecognizerDelegate>
 {
     SearchListJsonHandler *searchHandler;
 }
@@ -24,7 +25,7 @@
 /** 历史搜索的tableView */
 @property (nonatomic, strong) UITableView *historyTableView;
 /** 搜索新闻/用户/公司的tableView */
-@property (nonatomic, strong) UITableView *newsTableView;
+//@property (nonatomic, strong) UITableView *newsTableView;
 
 //@property (nonatomic, strong) UITableView *showTableView;
 
@@ -47,18 +48,16 @@
 /** 获取UserModel2数组数据 */
 @property (nonatomic, strong) NSArray *userArray;
 
+@property (nonatomic, assign) BOOL isReload;
+
 @end
 
 @implementation LMSearchViewController
 
--(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:NO];
-    
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.automaticallyAdjustsScrollViewInsets = YES;
+    _isReload = NO;
+//    self.automaticallyAdjustsScrollViewInsets = YES;
     searchHandler = [[SearchListJsonHandler alloc] init];
     searchHandler.delegate = self;
     
@@ -72,6 +71,21 @@
     
     //初始化UI
     [self setUI];
+    
+    // 单击的 Recognizer
+    UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap)];
+    singleTap.numberOfTapsRequired = 1; // 单击
+    [self.view addGestureRecognizer:singleTap];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldChanged:) name:UITextFieldTextDidChangeNotification object:nil];
+    
+   
+}
+#pragma mark
+#pragma mark - 单击手势方法
+- (void)handleSingleTap{
+     [self.search resignFirstResponder];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -102,7 +116,7 @@
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:negativeSpacer, rightItem,nil];
 
     /** 调整导航条上leftBarButtonItem和rightBarButtonItem与屏幕边界的间距
-     *  width为负数时，相当于btn向右移动width数值个像素，由于按钮本身和边界间距为5pix，所以width设为-5时，间距正好调整
+     *  width为负数时，相当于btn向右移动width数值个像素，由于按钮本身和边界间距为5pix，所以width设为-20时，间距正好调整
      *  为0；width为正数时，正好相反，相当于往左移动width数值个像素
      */
 
@@ -116,17 +130,8 @@
     self.historyTableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     self.historyTableView.delegate = self;
     self.historyTableView.dataSource = self;
-    self.historyTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.historyTableView.separatorStyle = 0;
     [self.view addSubview:self.historyTableView];
-    
-    
-    
-    
-//    [self.his bringSubviewToFront:self.newsTableView];
-//    self.newsTableView = self.historyTableView;
-//    [self.view addSubview:self.newsTableView];
-    
-    
     
 }
 
@@ -144,6 +149,8 @@
     _orgArray = _dataModel.org;
     _companyArray = _dataModel.company;
     _userArray = _dataModel.user;
+    _isReload = YES;
+    [self.historyTableView reloadData];
 }
 
 #pragma mark - UITextFieldDelegate
@@ -153,71 +160,41 @@
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
-//    if (textField.text.length < 1) {
-//        return;
-//    }
-//    // 封装请求参数
-//    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-//    params[@"word"] = textField.text;
-//    [searchHandler handlerSearchObject:@"https://rong.36kr.com/api/mobi/search" params:params];
-    
-//    NSLog(@"test");
-    // 获得网络数据 reload一次
-}
-
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-//    NSLog(@"shouldChangeCharactersInRange textField---%@",textField.text);
-//    NSLog(@"shouldChangeCharactersInRange string---%@",string);
-    NSString *wordValue  = [NSString stringWithFormat:@"%@%@",textField.text,string];
-//    NSLog(@"wordValue---!%@",wordValue);
+    if (textField.text.length < 1) {
+        return;
+    }
     // 封装请求参数
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"word"] = wordValue;
+    params[@"word"] = textField.text;
     [searchHandler handlerSearchObject:@"https://rong.36kr.com/api/mobi/search" params:params];
-//    [self.newsTableView reloadData];
-//    NSLog(@"test");
-    // 获得网络数据 reload一次
-    if (wordValue.length == 1) {
-//        self.historyTableView.hidden = YES;
-        self.newsTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.width, self.view.height) style:UITableViewStylePlain];
-        self.newsTableView.delegate = self;
-        self.newsTableView.dataSource = self;
-        self.newsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        [self.view addSubview:self.newsTableView];
-        
-//        self.newsTableView.hidden = YES;
-    }
-    [self.newsTableView reloadData];
     
-    return YES;
+}
+
+- (void)textFieldChanged:(NSNotification *)noti {
+//    NSLog(@"%@",_search.text);
+    //    NSLog(@"wordValue---!%@",wordValue);
+    // 封装请求参数
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"word"] = _search.text;
+    [searchHandler handlerSearchObject:@"https://rong.36kr.com/api/mobi/search" params:params];
+
+
 }
 
 - (BOOL)textFieldShouldClear:(UITextField *)textField {
-    self.newsTableView.hidden = YES;
     [self readNSUserDefaults];
     return YES;
 }
 
-//- (void)textFieldDidBeginEditing:(UITextField *)textField {
-////    NSLog(@"32131");
-//}
-
-- (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
-    NSLog(@"1232222");
-    return YES;
-}
-
 -(BOOL)textFieldShouldReturn:(UITextField *)textField{//搜索方法
-//     NSLog(@"567");
     if (textField.text.length > 0) {
-//        [self readNSUserDefaults];
         // 缓存搜索记录, reload一次
         
         [TokenTool SearchText:textField.text];//缓存搜索记录
-        [self readNSUserDefaults];
+        [textField resignFirstResponder];
         
     }else{
-        NSLog(@"请输入查找内容");
+        [textField resignFirstResponder];
     }
     
     return YES;
@@ -228,7 +205,7 @@
 
 #pragma mark - UITableViewDelegate/DataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if (tableView == self.historyTableView) {
+    if (!_isReload) {
         return 2;
     } else {
         int count = 0;
@@ -241,14 +218,17 @@
         if (_userArray.count) {
             count++;
         }
+        NSLog(@"count!!%d",count+1);
         return count + 1;//
     }
 //    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (tableView == self.historyTableView) {
+    if (!_isReload) {
+    
         if (section==0) {
+//            NSLog(@"section---%ld",section);
             if (_myArray.count>0) {
                 return _myArray.count+1+1;
             }else{
@@ -259,35 +239,52 @@
         }
 
     } else {
+
         if (section == 0) {
             return 1;
         } else if (section == 1) {
             if (_dataModel.moreuser) {
                 if (_userArray.count >= 3) {
-                    return 3;
+                    return 4;
                 }
-                return _userArray.count;
+                return _userArray.count + 1;
             }
             if (_dataModel.morecompany) {
                 if (_companyArray.count >= 3) {
-                    return 3;
+                    return 4;
                 }
-                return _companyArray.count;
+                return _companyArray.count + 1;
             }
             if (_orgArray.count) {
                 if (_orgArray.count >= 3) {
-                    return 3
+                    return 4;
                 }
-                return _orgArray.count;
+                return _orgArray.count + 1;
             }
-        } else {
-            
+        } else if (section == 2){
+            if (_dataModel.morecompany) {
+                if (_companyArray.count >= 3) {
+                    return 4;
+                }
+                return _companyArray.count + 1;
+            }
+            if (_orgArray.count) {
+                if (_orgArray.count >= 3) {
+                    return 4;
+                }
+                return _orgArray.count + 1;
+            }
+        }  else {
+            if (_orgArray.count >= 3) {
+                return 4;
+            }
+            return _orgArray.count + 1;
         }
-        return  1;
+        return 0;
     }
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (tableView == self.historyTableView) {
+    if (!_isReload) {
         if (indexPath.section==0) {
             if(indexPath.row ==0){
                 UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"cell"];
@@ -318,60 +315,96 @@
         }
 
     }  else {
-        if(indexPath.row ==0){
-            UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"cell"];
-            //            cell.sepa
-            if (_orgArray == 0 && _companyArray.count == 0 && _userArray.count == 0) {
-                cell = [[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"cell"];
-                //            cell.
-                cell.textLabel.text = @"搜索新闻";
+        if(indexPath.section == 0){
+            UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"searchCell"];
+            cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
+            cell.textLabel.text = @"搜索新闻";
+            cell.textLabel.textColor = fontCOLOR;
+            return cell;
+        }else if (indexPath.section ==  1){
+            NSLog(@"indexPath.row---%ld",indexPath.row);
+            if (_userArray.count < 1) {
+                 UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"userCell"];
+                return cell;
+            }
+            if (indexPath.row == 0) {
+                UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:1 reuseIdentifier:@"userCell"];
+                cell.textLabel.text = @"相关用户";
+                cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
+                cell.detailTextLabel.text = @"更多";
+                cell.detailTextLabel.font = [UIFont systemFontOfSize:11];
                 cell.textLabel.textColor = fontCOLOR;
                 return cell;
             }
-        }else if (indexPath.row == _myArray.count+1){
-            UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"cell"];
-            cell.textLabel.text = @"清除历史记录";
-            cell.textLabel.textColor = [UIColor blueColor];
-            cell.textLabel.textAlignment = NSTextAlignmentCenter;
-            return cell;
-        }else{
-            UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"cell"];
-            NSArray* reversedArray = [[_myArray reverseObjectEnumerator] allObjects];
-            cell.textLabel.text = reversedArray[indexPath.row-1];
-            return cell;
+            
+            
+            UserModel2 *userModel = _userArray[indexPath.row - 1];
+            SearchViewCell *searchCell = [SearchViewCell cellWithTableView:tableView];
+            searchCell.modelUser = userModel;
+            /* 忽略点击效果 */
+            [searchCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            return searchCell;
+        }else if (indexPath.section == 2){
+            if (_companyArray.count < 1) {
+                UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"companyCell"];
+                return cell;
+            }
+            if (indexPath.row == 0) {
+                UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:1 reuseIdentifier:@"companyCell"];
+                cell.textLabel.text = @"创业公司";
+                cell.detailTextLabel.text = @"更多";
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                cell.textLabel.textColor = fontCOLOR;
+                return cell;
+                
+            }
+            
+            CompanyModel2 *companyModel = _companyArray[indexPath.row - 1];
+            SearchViewCell *searchCell = [SearchViewCell cellWithTableView:tableView];
+            searchCell.modelCompany = companyModel;
+            /* 忽略点击效果 */
+            [searchCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            return searchCell;
+
+        } else if (indexPath.section == 3) {
+            if (_orgArray.count < 1) {
+                UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"orgCell"];
+                return cell;
+            }
+            
+            if (indexPath.row == 0) {
+                UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"orgCell"];
+                cell.textLabel.text = @"投资机构";
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                cell.textLabel.textColor = fontCOLOR;
+                return cell;
+                
+            }
+            
+            OrgModel *orgModel = _orgArray[indexPath.row - 1];
+            SearchViewCell *searchCell = [SearchViewCell cellWithTableView:tableView];
+            searchCell.modelOrg = orgModel;
+            /* 忽略点击效果 */
+            [searchCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            return searchCell;
+
         }
         
         
-        UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"cell"];
-//        NSArray* reversedArray = [[_myArray reverseObjectEnumerator] allObjects];
-        cell.textLabel.text = @"123";
+        UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"kcell"];
         return cell;
-
     }
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    NSLog(@"[NSString stringWithUTF8String:object_getClassName(tableView)]--%@",[NSString stringWithUTF8String:object_getClassName(tableView)]);
-    if (tableView == self.historyTableView) {
-        if (section==0) {
-            return 0;
-        }else{
-            return 0;
-        }
-    } else {
-
-        NSLog(@"666");
-        return 0;
-    }
-    
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 55;
 }
+
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    self.historyTableView.estimatedRowHeight = 44.0f;
-    //    self.searchTableView.estimatedRowHeight = 44.0f;
-    return UITableViewAutomaticDimension;
+    return 55;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (tableView == self.historyTableView) {
+    if (!_isReload) {
         [self.historyTableView deselectRowAtIndexPath:indexPath animated:YES];
         if (indexPath.row == _myArray.count+1) {//清除所有历史记录
             [TokenTool removeAllArray];
@@ -381,7 +414,7 @@
             
         }
     } else {
-        
+        return;
     }
     
 }
@@ -390,10 +423,10 @@
 -(void)readNSUserDefaults{//取出缓存的数据
     NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
     //读取数组NSArray类型的数据
+    _isReload = NO;
     NSArray * myArray = [userDefaultes arrayForKey:@"myArray"];
     self.myArray = myArray;
     [self.historyTableView reloadData];
-    NSLog(@"myArray======%@",myArray);
 }
 
 @end

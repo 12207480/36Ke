@@ -22,7 +22,6 @@
 		AE113BA21C88130400608DFC /* UIView+REFrostedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE113B9B1C88130400608DFC /* UIView+REFrostedViewController.m */; };
 		AE113BA31C88130400608DFC /* UIViewController+REFrostedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE113B9D1C88130400608DFC /* UIViewController+REFrostedViewController.m */; };
 		AE113BA61C88234100608DFC /* LMTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE113BA51C88234100608DFC /* LMTabBarController.m */; };
-		AE113BA81C88306900608DFC /* LMFindViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AE113BA71C88306900608DFC /* LMFindViewController.xib */; };
 		AE113BAC1C88347100608DFC /* LMNewsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AE113BAA1C88347100608DFC /* LMNewsCell.m */; };
 		AE113BAD1C88347100608DFC /* LMNewsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AE113BAB1C88347100608DFC /* LMNewsCell.xib */; };
 		AE1E959A1C889C1E00BA8553 /* BaseTool.m in Sources */ = {isa = PBXBuildFile; fileRef = AE1E95971C889C1E00BA8553 /* BaseTool.m */; };
@@ -30,6 +29,8 @@
 		AE3B14311C887EF90021F521 /* HeaderModel.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3B14301C887EF90021F521 /* HeaderModel.m */; };
 		AE3B14341C887F0B0021F521 /* NewsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3B14331C887F0B0021F521 /* NewsModel.m */; };
 		AE3B14371C8884E60021F521 /* LMNewsRefreshHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3B14361C8884E60021F521 /* LMNewsRefreshHeader.m */; };
+		AE4951641CA0344E00B14FEF /* SearchViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AE4951621CA0344E00B14FEF /* SearchViewCell.m */; };
+		AE4951651CA0344E00B14FEF /* SearchViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AE4951631CA0344E00B14FEF /* SearchViewCell.xib */; };
 		AE4C0F691C5FC97F009AB064 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AE4C0F671C5FC97F009AB064 /* Main.storyboard */; };
 		AE4C0F6B1C5FC97F009AB064 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AE4C0F6A1C5FC97F009AB064 /* Images.xcassets */; };
 		AE4C0F6E1C5FC97F009AB064 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = AE4C0F6C1C5FC97F009AB064 /* LaunchScreen.xib */; };
@@ -119,6 +120,12 @@
 		AEE95FC31C9F917E00DC815D /* SearchModel.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE95FC21C9F917E00DC815D /* SearchModel.m */; };
 		AEE95FC61C9F91FD00DC815D /* SearchListJsonHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE95FC51C9F91FD00DC815D /* SearchListJsonHandler.m */; };
 		AEE95FC91C9FA72E00DC815D /* SearchModel2.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE95FC81C9FA72E00DC815D /* SearchModel2.m */; };
+		AEE983E41CA0EA6D0005512B /* InvestmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE983E01CA0EA6D0005512B /* InvestmentViewController.m */; };
+		AEE983E51CA0EA6D0005512B /* InvestmentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AEE983E11CA0EA6D0005512B /* InvestmentViewController.xib */; };
+		AEE983E91CA0EAD00005512B /* LMDiscoveryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE983E71CA0EAD00005512B /* LMDiscoveryViewController.m */; };
+		AEE983EA1CA0EAD00005512B /* LMDiscoveryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AEE983E81CA0EAD00005512B /* LMDiscoveryViewController.xib */; };
+		AEE983EE1CA0EAE90005512B /* MyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE983EC1CA0EAE90005512B /* MyViewController.m */; };
+		AEE983EF1CA0EAE90005512B /* MyViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AEE983ED1CA0EAE90005512B /* MyViewController.xib */; };
 		AEEA69131C910E0D0091EE6F /* UserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = AEEA69121C910E0D0091EE6F /* UserModel.m */; };
 /* End PBXBuildFile section */
 
@@ -160,7 +167,6 @@
 		AE113B9D1C88130400608DFC /* UIViewController+REFrostedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+REFrostedViewController.m"; sourceTree = "<group>"; };
 		AE113BA41C88234100608DFC /* LMTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTabBarController.h; sourceTree = "<group>"; };
 		AE113BA51C88234100608DFC /* LMTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTabBarController.m; sourceTree = "<group>"; };
-		AE113BA71C88306900608DFC /* LMFindViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LMFindViewController.xib; sourceTree = "<group>"; };
 		AE113BA91C88347100608DFC /* LMNewsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMNewsCell.h; sourceTree = "<group>"; };
 		AE113BAA1C88347100608DFC /* LMNewsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMNewsCell.m; sourceTree = "<group>"; };
 		AE113BAB1C88347100608DFC /* LMNewsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LMNewsCell.xib; sourceTree = "<group>"; };
@@ -174,6 +180,9 @@
 		AE3B14331C887F0B0021F521 /* NewsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsModel.m; sourceTree = "<group>"; };
 		AE3B14351C8884E60021F521 /* LMNewsRefreshHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMNewsRefreshHeader.h; sourceTree = "<group>"; };
 		AE3B14361C8884E60021F521 /* LMNewsRefreshHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMNewsRefreshHeader.m; sourceTree = "<group>"; };
+		AE4951611CA0344E00B14FEF /* SearchViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchViewCell.h; sourceTree = "<group>"; };
+		AE4951621CA0344E00B14FEF /* SearchViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchViewCell.m; sourceTree = "<group>"; };
+		AE4951631CA0344E00B14FEF /* SearchViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchViewCell.xib; sourceTree = "<group>"; };
 		AE4C0F5A1C5FC97F009AB064 /* 36Ke.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 36Ke.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE4C0F5E1C5FC97F009AB064 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AE4C0F681C5FC97F009AB064 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -345,6 +354,15 @@
 		AEE95FC51C9F91FD00DC815D /* SearchListJsonHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchListJsonHandler.m; sourceTree = "<group>"; };
 		AEE95FC71C9FA72E00DC815D /* SearchModel2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchModel2.h; sourceTree = "<group>"; };
 		AEE95FC81C9FA72E00DC815D /* SearchModel2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchModel2.m; sourceTree = "<group>"; };
+		AEE983DF1CA0EA6D0005512B /* InvestmentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InvestmentViewController.h; sourceTree = "<group>"; };
+		AEE983E01CA0EA6D0005512B /* InvestmentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InvestmentViewController.m; sourceTree = "<group>"; };
+		AEE983E11CA0EA6D0005512B /* InvestmentViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InvestmentViewController.xib; sourceTree = "<group>"; };
+		AEE983E61CA0EAD00005512B /* LMDiscoveryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMDiscoveryViewController.h; sourceTree = "<group>"; };
+		AEE983E71CA0EAD00005512B /* LMDiscoveryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMDiscoveryViewController.m; sourceTree = "<group>"; };
+		AEE983E81CA0EAD00005512B /* LMDiscoveryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LMDiscoveryViewController.xib; sourceTree = "<group>"; };
+		AEE983EB1CA0EAE90005512B /* MyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyViewController.h; sourceTree = "<group>"; };
+		AEE983EC1CA0EAE90005512B /* MyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyViewController.m; sourceTree = "<group>"; };
+		AEE983ED1CA0EAE90005512B /* MyViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyViewController.xib; sourceTree = "<group>"; };
 		AEEA69111C910E0D0091EE6F /* UserModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserModel.h; sourceTree = "<group>"; };
 		AEEA69121C910E0D0091EE6F /* UserModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserModel.m; sourceTree = "<group>"; };
 		D57625D60166AA2B1D551B56 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
@@ -473,6 +491,7 @@
 				AE4C0F941C5FCA2E009AB064 /* HttpRequest */,
 				AE4C0F951C5FCA2E009AB064 /* Information（消息） */,
 				AE4C0FBD1C5FCA2E009AB064 /* Me（我） */,
+				AEE983DD1CA0EA6D0005512B /*  Investment（股权投资） */,
 				AE4C0FC71C5FCA2E009AB064 /* News（新闻） */,
 				AE4EAACE1C85CCD000AFF64A /* Newfeature(新特性) */,
 				AE4C0F9F1C5FCA2E009AB064 /* Main */,
@@ -539,7 +558,9 @@
 		AE4C0F8D1C5FCA2E009AB064 /* MainViewController */ = {
 			isa = PBXGroup;
 			children = (
-				AE113BA71C88306900608DFC /* LMFindViewController.xib */,
+				AEE983E61CA0EAD00005512B /* LMDiscoveryViewController.h */,
+				AEE983E71CA0EAD00005512B /* LMDiscoveryViewController.m */,
+				AEE983E81CA0EAD00005512B /* LMDiscoveryViewController.xib */,
 			);
 			path = MainViewController;
 			sourceTree = "<group>";
@@ -839,6 +860,9 @@
 				AE0E832E1C9DBB5800032356 /* MenuViewCell.xib */,
 				AE6B60EF1C9EF9E50022CA7A /* LMSearchBar.h */,
 				AE6B60F01C9EF9E50022CA7A /* LMSearchBar.m */,
+				AE4951611CA0344E00B14FEF /* SearchViewCell.h */,
+				AE4951621CA0344E00B14FEF /* SearchViewCell.m */,
+				AE4951631CA0344E00B14FEF /* SearchViewCell.xib */,
 			);
 			path = MainView;
 			sourceTree = "<group>";
@@ -879,6 +903,9 @@
 		AE4C0FC01C5FCA2E009AB064 /* MainViewController */ = {
 			isa = PBXGroup;
 			children = (
+				AEE983EB1CA0EAE90005512B /* MyViewController.h */,
+				AEE983EC1CA0EAE90005512B /* MyViewController.m */,
+				AEE983ED1CA0EAE90005512B /* MyViewController.xib */,
 			);
 			path = MainViewController;
 			sourceTree = "<group>";
@@ -1368,6 +1395,40 @@
 			path = LMVideoPlay;
 			sourceTree = "<group>";
 		};
+		AEE983DD1CA0EA6D0005512B /*  Investment（股权投资） */ = {
+			isa = PBXGroup;
+			children = (
+				AEE983DE1CA0EA6D0005512B /* Controller */,
+				AEE983E21CA0EA6D0005512B /* Model */,
+				AEE983E31CA0EA6D0005512B /* View */,
+			);
+			path = " Investment（股权投资）";
+			sourceTree = "<group>";
+		};
+		AEE983DE1CA0EA6D0005512B /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				AEE983DF1CA0EA6D0005512B /* InvestmentViewController.h */,
+				AEE983E01CA0EA6D0005512B /* InvestmentViewController.m */,
+				AEE983E11CA0EA6D0005512B /* InvestmentViewController.xib */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		AEE983E21CA0EA6D0005512B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		AEE983E31CA0EA6D0005512B /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1451,6 +1512,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AEE983EF1CA0EAE90005512B /* MyViewController.xib in Resources */,
+				AE4951651CA0344E00B14FEF /* SearchViewCell.xib in Resources */,
 				AE4C0F691C5FC97F009AB064 /* Main.storyboard in Resources */,
 				AED8A92B1C90598400D1EDD6 /* ContentTopCell.xib in Resources */,
 				AEA893B11C913DC200686A15 /* CompanyCell.xib in Resources */,
@@ -1458,14 +1521,15 @@
 				AED8A9291C90597600D1EDD6 /* KeTVCell.xib in Resources */,
 				AEB15D9F1C9E6E28006BF049 /* MoreHeaderView.xib in Resources */,
 				AEA893B81C91413800686A15 /* AllCommentView.xib in Resources */,
-				AE113BA81C88306900608DFC /* LMFindViewController.xib in Resources */,
 				AED8A9431C906C9100D1EDD6 /* content_template.html in Resources */,
 				AE4C0F6E1C5FC97F009AB064 /* LaunchScreen.xib in Resources */,
 				AE4DB4271C91B64900F9AB22 /* NewCommentCell.xib in Resources */,
 				AE113BAD1C88347100608DFC /* LMNewsCell.xib in Resources */,
+				AEE983EA1CA0EAD00005512B /* LMDiscoveryViewController.xib in Resources */,
 				AED8A92D1C9059A300D1EDD6 /* CommentCell.xib in Resources */,
 				AE4C0F6B1C5FC97F009AB064 /* Images.xcassets in Resources */,
 				AE4EAAD61C85D87C00AFF64A /* NewfeatureXib.xib in Resources */,
+				AEE983E51CA0EA6D0005512B /* InvestmentViewController.xib in Resources */,
 				AEB15DA41C9E714B006BF049 /* MoreViewCell.xib in Resources */,
 				AEE8F5581C9CF8C00034ADE1 /* LMPlayer.bundle in Resources */,
 				AED8A9441C906C9100D1EDD6 /* jquery.js in Resources */,
@@ -1553,6 +1617,7 @@
 				AE0E832F1C9DBB5800032356 /* MenuViewCell.m in Sources */,
 				AE4C0FDC1C5FCA2E009AB064 /* UIBarButtonItem+Extension.m in Sources */,
 				AE113BA21C88130400608DFC /* UIView+REFrostedViewController.m in Sources */,
+				AEE983EE1CA0EAE90005512B /* MyViewController.m in Sources */,
 				AE4C0FDB1C5FCA2E009AB064 /* NSString+Extension.m in Sources */,
 				AE4C0FDD1C5FCA2E009AB064 /* UIButton+Extension.m in Sources */,
 				AE4C0FDE1C5FCA2E009AB064 /* UIColor+Extension.m in Sources */,
@@ -1570,6 +1635,7 @@
 				AEEA69131C910E0D0091EE6F /* UserModel.m in Sources */,
 				AEA893A01C913B3C00686A15 /* CompanyListJsonHandler.m in Sources */,
 				AE113BA31C88130400608DFC /* UIViewController+REFrostedViewController.m in Sources */,
+				AEE983E91CA0EAD00005512B /* LMDiscoveryViewController.m in Sources */,
 				AEC0D8B11C886C8C0098C019 /* NSString+Password.m in Sources */,
 				AEC0D8B81C886C8C0098C019 /* UIImage+FixOrientation.m in Sources */,
 				AE8075441C90368D009D62F4 /* CommentCell.m in Sources */,
@@ -1581,6 +1647,7 @@
 				AE3B14311C887EF90021F521 /* HeaderModel.m in Sources */,
 				AE113BA61C88234100608DFC /* LMTabBarController.m in Sources */,
 				AE113B901C880DC600608DFC /* LMNavigationController.m in Sources */,
+				AE4951641CA0344E00B14FEF /* SearchViewCell.m in Sources */,
 				AEE95FC01C9F8A7F00DC815D /* TokenTool.m in Sources */,
 				AEC0D8C11C886CF00098C019 /* HeaderListJsonHandler.m in Sources */,
 				AE4C0FD91C5FCA2E009AB064 /* NSData+Extension.m in Sources */,
@@ -1595,6 +1662,7 @@
 				AEC0D8C41C886F7B0098C019 /* LMNetworkTools.m in Sources */,
 				AED8A9331C9066AC00D1EDD6 /* ContentViewController.m in Sources */,
 				AED8A9271C903BBA00D1EDD6 /* NewsListJsonHandler.m in Sources */,
+				AEE983E41CA0EA6D0005512B /* InvestmentViewController.m in Sources */,
 				AE3B14371C8884E60021F521 /* LMNewsRefreshHeader.m in Sources */,
 				AE80753B1C90323B009D62F4 /* KeTVViewController.m in Sources */,
 				AE4C0FDF1C5FCA2E009AB064 /* UIImage+Extension.m in Sources */,

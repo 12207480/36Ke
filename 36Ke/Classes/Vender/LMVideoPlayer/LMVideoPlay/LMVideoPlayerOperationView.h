@@ -41,4 +41,5 @@
 - (void)dismiss;
 - (void)toSmallScreen;
 - (void)fullScreenButtonClick;
+- (void)toCell:(UITableViewCell *)cell;
 @end

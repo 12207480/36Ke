@@ -17,17 +17,10 @@
 #import "NewsListJsonHandler.h"
 #import "LMNewsRefreshHeader.h"
 #import "LMVideoPlayerOperationView.h"
-
-#define kScreenWidth  [UIScreen mainScreen].bounds.size.width
-#define kScreenHeight [UIScreen mainScreen].bounds.size.height
-#define kDeviceVersion [[UIDevice currentDevice].systemVersion floatValue]
-#define WS(weakSelf) __weak __typeof(&*self)weakSelf = self;
-
-
+#import "LMSearchViewController.h"
 
 #define kDeviceVersion [[UIDevice currentDevice].systemVersion floatValue]
 #define kNavbarHeight ((kDeviceVersion>=7.0)? 64 :44 )
-#define kIOS7DELTA   ((kDeviceVersion>=7.0)? 20 :0 )
 #define kTabBarHeight 49
 @interface KeTVViewController () <UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate,NewsListJsonHandlerDelegate> {
     NewsListJsonHandler *newsHandler;
@@ -59,9 +52,7 @@
     _titleItem = title;
     self.newsArray = [NSMutableArray array];
     if (self = [super init]) {
-        
-        //        self.navigationItem.title = title;
-        
+        //
     }
     return self;
 }
@@ -107,7 +98,8 @@
         //放widow上,小屏显示
         [lmPlayer toSmallScreen];
     }else{
-        [self toCell];
+        _currentCell = (KeTVCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:currentIndexPath.row inSection:0]];
+        [lmPlayer toCell:_currentCell];
     }
 //    [self toCell];
    
@@ -124,23 +116,21 @@
     UIInterfaceOrientation interfaceOrientation = (UIInterfaceOrientation)orientation;
     switch (interfaceOrientation) {
         case UIInterfaceOrientationPortraitUpsideDown:{
-            NSLog(@"第3个旋转方向---电池栏在下");
         }
             break;
         case UIInterfaceOrientationPortrait:{
-            NSLog(@"第0个旋转方向---电池栏在上");
             if (lmPlayer.isFullscreenMode) {
                 if (lmPlayer.isSmallScreen) {
                     //放widow上,小屏显示
                     [lmPlayer toSmallScreen];
                 }else{
-                    [self toCell];
+                    _currentCell = (KeTVCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:currentIndexPath.row inSection:0]];
+                    [lmPlayer toCell:_currentCell];
                 }
             }
         }
             break;
         case UIInterfaceOrientationLandscapeLeft:{
-            NSLog(@"第2个旋转方向---电池栏在左");
             if (lmPlayer.isFullscreenMode == NO) {
                 lmPlayer.isFullscreenMode = YES;
                 
@@ -150,7 +140,6 @@
         }
             break;
         case UIInterfaceOrientationLandscapeRight:{
-            NSLog(@"第1个旋转方向---电池栏在右");
             if (lmPlayer.isFullscreenMode == NO) {
                 lmPlayer.isFullscreenMode = YES;
                 [self setNeedsStatusBarAppearanceUpdate];
@@ -162,30 +151,6 @@
             break;
     }
 }
-
-- (void)toCell{
-    KeTVCell *currentCell = (KeTVCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:currentIndexPath.row inSection:0]];
-//    NSLog(@"currentCell---%@",currentCell.titleLabel.text);
-    [lmPlayer removeFromSuperview];
-    NSLog(@"row = %ld",currentIndexPath.row);
-    [UIView animateWithDuration:0.5f animations:^{
-        lmPlayer.transform = CGAffineTransformIdentity;
-        lmPlayer.frame = currentCell.bounds;
-        lmPlayer.playerLayer.frame =  lmPlayer.bounds;
-        lmPlayer.videoControl.frame = lmPlayer.bounds;
-        NSLog(@"lmPlayer.playerLayer.frame---%@",NSStringFromCGRect(lmPlayer.playerLayer.frame));
-        
-        NSLog(@"lmPlayer.frame---%@",NSStringFromCGRect(lmPlayer.frame));
-        [currentCell addSubview:lmPlayer];
-        [currentCell bringSubviewToFront:lmPlayer];
-    }completion:^(BOOL finished) {
-        lmPlayer.isFullscreenMode = NO;
-        lmPlayer.isSmallScreen = NO;
-        
-    }];
-}
-
-
 -(void)toFullScreenWithInterfaceOrientation:(UIInterfaceOrientation )interfaceOrientation{
     [lmPlayer removeFromSuperview];
     lmPlayer.transform = CGAffineTransformIdentity;
@@ -234,7 +199,8 @@
                 if ([self.currentCell.subviews containsObject:lmPlayer]) {
 //                    [self toCell];
                 }else{
-                    [self toCell];
+                    _currentCell = (KeTVCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:currentIndexPath.row inSection:0]];
+                    [lmPlayer toCell:_currentCell];
                 }
             }
         }
@@ -329,6 +295,12 @@
     self.navigationItem.title = @"氪TV";
     
 }
+
+- (void)commonSearch {
+    LMSearchViewController *searchVC = [[LMSearchViewController alloc] init];
+    [self.navigationController pushViewController:searchVC animated:YES];
+}
+
 - (void)setupHeaderRefresh {
     
     self.view.backgroundColor = [UIColor whiteColor];
@@ -344,8 +316,6 @@
     self.tableView.mj_header = header;
     // 设置回调（一旦进入上拉刷新刷新状态就会调用这个refreshingBlock）
     MJRefreshBackStateFooter *footer = [MJRefreshBackStateFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
-    //    [footer setTitle:@"" forState:MJRefreshStateRefreshing];
-    //    [footer setTitle:@"" forState:MJRefreshStatePulling];
     [footer setTitle:@"" forState:MJRefreshStateIdle];
     self.tableView.mj_footer = footer;
 }
@@ -353,24 +323,16 @@
 #pragma mark 下拉刷新
 - (void)loadData
 {
-    NSString *allUrlstring;
-    allUrlstring = [NSString stringWithFormat:@"https://rong.36kr.com/api/mobi/news?columnId=%@",_column];
+    
+    NSString *allUrlstring = [NSString stringWithFormat:@"https://rong.36kr.com/api/mobi/news?columnId=%@",_column];
     
     [self loadDataForType:1  column:_column  withURL:allUrlstring];
 }
 #pragma mark 上拉刷新
 - (void)loadMoreData
 {
-    //    https://rong.36kr.com/api/mobi/news?   https://rong.36kr.com/api/mobi/news?columnId=67
-    NSString *allUrlstring;
-    //    NSString *allUrlstring;
+    NSString *allUrlstring = [NSString stringWithFormat:@"https://rong.36kr.com/api/mobi/news?columnId=%@&lastId=%@",_column,_lastId];
     
-    if ([_column isEqualToString:@"all"]) {
-        allUrlstring = [NSString stringWithFormat:@"https://rong.36kr.com/api/mobi/news?lastId=%@",_lastId];
-    }
-    else {
-        allUrlstring = [NSString stringWithFormat:@"https://rong.36kr.com/api/mobi/news?columnId=%@&lastId=%@",_column,_lastId];
-    }
     
     [self loadDataForType:2 column:_column  withURL:allUrlstring];
     
@@ -456,7 +418,8 @@
     
     // 解决小屏幕的时候，点击其他视频，视频不出现在点击的cell上，而是出现在小屏幕上，而且小屏幕会往下移动，不便查看
     if (lmPlayer.isSmallScreen) {
-        [self toCell];
+        _currentCell = (KeTVCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:currentIndexPath.row inSection:0]];
+        [lmPlayer toCell:_currentCell];
     } else {
         [self.currentCell addSubview:lmPlayer];
         [self.currentCell bringSubviewToFront:lmPlayer];
