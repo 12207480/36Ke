@@ -5,6 +5,7 @@
 文章博客介绍：<a>http://www.jianshu.com/p/0ccf4ea14e79</a> <br/>
 希望顺便点一下右上角的⭐️Star ，朋友的鼓励和支持是我继续分享的动力 <br/>
 演示图： <br/>  
+![alt text](http://ww2.sinaimg.cn/mw690/6a581e39gw1f25mi41j1bg20ah0ieb2g.gif)
 ![alt text](http://upload-images.jianshu.io/upload_images/1231308-7f9dd33a9e10288f.gif?imageMogr2/auto-orient/strip)
 ![alt text](http://upload-images.jianshu.io/upload_images/1231308-00a14639a7557d42.gif?imageMogr2/auto-orient/strip)
 ![alt text](http://upload-images.jianshu.io/upload_images/1231308-92dc2612532b7f7e.gif?imageMogr2/auto-orient/strip)
