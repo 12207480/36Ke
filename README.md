@@ -1,10 +1,11 @@
 # 36Ke
 一款仿36氪iOS版APP（正在更新） <br/>
-项目描述：	36氪提供创业资讯、科技新闻、投融资对接、股权投资、极速融资等创业服务,致力成为创业者可以依赖的创业服务平台,为创业者提供最好的产品和服务。 <br/>
-主要功能简介： <br/>
-新闻：查看科技新闻、创业资讯（已完成，并且实现了离线缓存） <br/>
-发现：寻找投资人、申请融资等 <br/>
-股权投资：股权投资相关新闻、募资信息等 <br/>
-我的：个人用户信息、收藏等 <br/>
+所有的数据都是通过Charles抓包工具获取到的, 图片通过Extractor解压得到（部分图片找不到），视频播放器是通过36氪开源播放器（采用View+MPMoviePlayerViewController）改进的播放器使用的是View + AVPlayer，支持播放mp4、mov等格式，网络和本地视频同时支持,支持Cell中全屏和小屏自动感应旋转屏幕，参考WMPlayer,无需第三方库支持。
+文章博客介绍：<a></a>
+希望顺便点一下右上角的⭐️Star ，ni 的鼓励和支持是我继续分享的动力
 演示图： <br/>
 ![alt text](https://github.com/lingtingSir/36Ke/blob/master/36ke3.gif)
+![alt text](https://github.com/lingtingSir/36Ke/blob/master/36ke3.gif)
+![alt text](https://github.com/lingtingSir/36Ke/blob/master/36ke3.gif)
+![alt text](https://github.com/lingtingSir/36Ke/blob/master/36ke3.gif)
+![alt text](https://github.com/lingtingSir/36Ke/blob/master/36ke3.gif)![alt text](https://github.com/lingtingSir/36Ke/blob/master/36ke3.gif)
