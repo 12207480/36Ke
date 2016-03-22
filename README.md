@@ -1,10 +1,10 @@
 # 36Ke
 一款仿36氪iOS版APP（正在更新） <br/>
-所有的数据都是通过Charles抓包工具获取到的, 图片通过Extractor解压得到（部分图片找不到），视频播放器是通过36氪开源播放器（采用View+MPMoviePlayerViewController）改进的播放器使用的是View + AVPlayer，支持播放mp4、mov等格式，网络和本地视频同时支持,支持Cell中全屏和小屏自动感应旋转屏幕，参考WMPlayer,无需第三方库支持。
-视频播放器github地址：<a>https://github.com/lingtingSir/LMVideoPlayer</a>
-文章博客介绍：<a>http://www.jianshu.com/p/0ccf4ea14e79</a>
-希望顺便点一下右上角的⭐️Star ，ni 的鼓励和支持是我继续分享的动力
-演示图： <br/>
+所有的数据都是通过Charles抓包工具获取到的,  图片通过Extractor解压得到（部分图片找不到），视频播放器是通过36氪开源播放器（采用View+MPMoviePlayerViewController）改进的播放器使用的是View + AVPlayer，支持播放mp4、mov等格式，网络和本地视频同时支持,支持Cell中全屏和小屏自动感应旋转屏幕，参考WMPlayer。<br/>
+视频播放器github地址：<a>https://github.com/lingtingSir/LMVideoPlayer</a> <br/>
+文章博客介绍：<a>http://www.jianshu.com/p/0ccf4ea14e79</a> <br/>
+希望顺便点一下右上角的⭐️Star ，ni 的鼓励和支持是我继续分享的动力 <br/>
+演示图： <br/>  
 ![alt text](http://upload-images.jianshu.io/upload_images/1231308-7f9dd33a9e10288f.gif?imageMogr2/auto-orient/strip)
 ![alt text](http://upload-images.jianshu.io/upload_images/1231308-00a14639a7557d42.gif?imageMogr2/auto-orient/strip)
 ![alt text](http://upload-images.jianshu.io/upload_images/1231308-92dc2612532b7f7e.gif?imageMogr2/auto-orient/strip)
