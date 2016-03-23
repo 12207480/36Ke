@@ -2,6 +2,7 @@
 一款仿36氪iOS版APP（正在更新）lmj->林名君（在校学生）  <br/>
 <b>
 这是一款适合初级iOS开发项目的样本，控制器和网络请求的代码分离，控制器和View的代码也是比较简洁，这也是我目前经常用到开发模式，总的来说，如果你刚开始想做一个项目，项目的搭建方式可以按着来，希望对大家有用，本人目前也是很努力中学习和看开源项目，有问题可以大家一起探讨QQ363905547 </b><br/>
+<b>项目解决视频播放器的网速慢卡顿的问题还有添加了离线缓存 </b>
 所有的数据都是通过Charles抓包工具获取到的,  图片通过Extractor解压得到（部分图片找不到），视频播放器是通过36氪开源播放器（采用View+MPMoviePlayerViewController）改进的播放器使用的是View + AVPlayer，支持播放mp4、mov等格式，网络和本地视频同时支持,支持Cell中全屏和小屏自动感应旋转屏幕，参考WMPlayer。<br/>
 视频播放器github地址：<a>https://github.com/lingtingSir/LMVideoPlayer</a> <br/>
 文章博客介绍：<a>http://www.jianshu.com/p/0ccf4ea14e79</a> <br/>
