@@ -89,6 +89,15 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
                        forKeyPath:@"status"
                           options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
                           context:PlayViewStatusObservationContext];
+    
+    
+    //旋转屏幕通知
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onDeviceOrientationChange)
+                                                 name:UIDeviceOrientationDidChangeNotification
+                                               object:nil
+     ];
+
 }
 
 - (void)currentItemEndPause {
@@ -538,6 +547,73 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     }];
 }
 
+-(void)toFullScreenWithInterfaceOrientation:(UIInterfaceOrientation )interfaceOrientation{
+    [self removeFromSuperview];
+    self.transform = CGAffineTransformIdentity;
+    if (interfaceOrientation==UIInterfaceOrientationLandscapeLeft) {
+        self.transform = CGAffineTransformMakeRotation(-M_PI_2);
+    }else if(interfaceOrientation==UIInterfaceOrientationLandscapeRight){
+        self.transform = CGAffineTransformMakeRotation(M_PI_2);
+    }
+    self.frame = CGRectMake(0, 0, kScreenWidth, kScreenHeight);
+    self.playerLayer.frame =  CGRectMake(0,0, kScreenHeight,kScreenWidth);
+    self.videoControl.frame = CGRectMake(0, 0, kScreenHeight, kScreenWidth);
+    
+    
+    
+    [[UIApplication sharedApplication].keyWindow addSubview:self];
+    
+    
+    //    lmPlayer.fullScreenBtn.selected = YES;
+    [self bringSubviewToFront:self.videoControl.bottomView];
+    
+}
+/**
+ *  旋转屏幕通知
+ */
+- (void)onDeviceOrientationChange{
+    if (self==nil||self.superview==nil){
+        return;
+    }
+    UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
+    UIInterfaceOrientation interfaceOrientation = (UIInterfaceOrientation)orientation;
+    switch (interfaceOrientation) {
+        case UIInterfaceOrientationPortraitUpsideDown:{
+        }
+            break;
+        case UIInterfaceOrientationPortrait:{
+            if (self.isFullscreenMode) {
+                if (self.isSmallScreen) {
+                    //放widow上,小屏显示
+                    [self toSmallScreen];
+                }else{
+                    
+                    [self toCell:_currentCell];
+                }
+            }
+        }
+            break;
+        case UIInterfaceOrientationLandscapeLeft:{
+            if (self.isFullscreenMode == NO) {
+                self.isFullscreenMode = YES;
+                
+//                [self setNeedsStatusBarAppearanceUpdate];
+                [self toFullScreenWithInterfaceOrientation:interfaceOrientation];
+            }
+        }
+            break;
+        case UIInterfaceOrientationLandscapeRight:{
+            if (self.isFullscreenMode == NO) {
+                self.isFullscreenMode = YES;
+//                [self setNeedsStatusBarAppearanceUpdate];
+                [self toFullScreenWithInterfaceOrientation:interfaceOrientation];
+            }
+        }
+            break;
+        default:
+            break;
+    }
+}
 
 
 @end

@@ -34,6 +34,9 @@
 @property (nonatomic, assign) CGRect viewframe;
 
 
+@property (nonatomic, retain) UITableViewCell *currentCell;
+
+
 
 - (instancetype)initWithFrame:(CGRect)frame videoURLString:(NSString *)videoURLString;
 - (void)configAvplayer:(NSString *)videoURLString;

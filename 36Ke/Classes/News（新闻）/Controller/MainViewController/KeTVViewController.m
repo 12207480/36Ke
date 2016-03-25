@@ -80,13 +80,6 @@
     [super viewWillAppear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
     
-    //旋转屏幕通知
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(onDeviceOrientationChange)
-                                                 name:UIDeviceOrientationDidChangeNotification
-                                               object:nil
-     ];
-
     if (self.update == YES) {
         [self.tableView.mj_header beginRefreshing];
         self.update = NO;
@@ -104,53 +97,6 @@
 //    [self toCell];
    
 }
-
-/**
- *  旋转屏幕通知
- */
-- (void)onDeviceOrientationChange{
-    if (lmPlayer==nil||lmPlayer.superview==nil){
-        return;
-    }
-    UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
-    UIInterfaceOrientation interfaceOrientation = (UIInterfaceOrientation)orientation;
-    switch (interfaceOrientation) {
-        case UIInterfaceOrientationPortraitUpsideDown:{
-        }
-            break;
-        case UIInterfaceOrientationPortrait:{
-            if (lmPlayer.isFullscreenMode) {
-                if (lmPlayer.isSmallScreen) {
-                    //放widow上,小屏显示
-                    [lmPlayer toSmallScreen];
-                }else{
-                    _currentCell = (KeTVCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:currentIndexPath.row inSection:0]];
-                    [lmPlayer toCell:_currentCell];
-                }
-            }
-        }
-            break;
-        case UIInterfaceOrientationLandscapeLeft:{
-            if (lmPlayer.isFullscreenMode == NO) {
-                lmPlayer.isFullscreenMode = YES;
-                
-                [self setNeedsStatusBarAppearanceUpdate];
-                [self toFullScreenWithInterfaceOrientation:interfaceOrientation];
-            }
-        }
-            break;
-        case UIInterfaceOrientationLandscapeRight:{
-            if (lmPlayer.isFullscreenMode == NO) {
-                lmPlayer.isFullscreenMode = YES;
-                [self setNeedsStatusBarAppearanceUpdate];
-                [self toFullScreenWithInterfaceOrientation:interfaceOrientation];
-            }
-        }
-            break;
-        default:
-            break;
-    }
-}
 -(void)toFullScreenWithInterfaceOrientation:(UIInterfaceOrientation )interfaceOrientation{
     [lmPlayer removeFromSuperview];
     lmPlayer.transform = CGAffineTransformIdentity;
@@ -161,7 +107,7 @@
     }
     lmPlayer.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     lmPlayer.playerLayer.frame =  CGRectMake(0,0, self.view.frame.size.height,self.view.frame.size.width);
-
+    
     
     [[UIApplication sharedApplication].keyWindow addSubview:lmPlayer];
     
@@ -401,16 +347,17 @@
         
     }
     KeTVData2 *model = [_newsArray objectAtIndex:sender.tag];
-    
     if (lmPlayer.player) {
         [lmPlayer removeFromSuperview];
         [lmPlayer.player replaceCurrentItemWithPlayerItem:nil];
         [lmPlayer configAvplayer:model.tv.videoSource480];
+        lmPlayer.currentCell = self.currentCell;
         [lmPlayer play];
         
     }else{
         lmPlayer = [[LMVideoPlayerOperationView alloc]initWithFrame:self.currentCell.backgroundIV.bounds videoURLString:model.tv.videoSource480];
 //        lmPlayer = [[LMVideoPlayerOperationView alloc] initWithFrame:<#(CGRect)#> videoURLString:<#(NSString *)#>]
+        lmPlayer.currentCell = self.currentCell;
         [lmPlayer play];
         
     }
@@ -430,7 +377,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    return 300;
+    return 274;
 }
 
 #pragma mark - UITableViewDataSource
