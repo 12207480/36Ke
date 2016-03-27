@@ -44,7 +44,23 @@
     if (cell == nil) {
         cell = [[[NSBundle mainBundle] loadNibNamed:NSStringFromClass([LMNewsCell class]) owner:nil options:nil] lastObject];
     }
-    [cell.iconImageView sd_setImageWithURL:[NSURL URLWithString:model.featureImg]];
+//    [cell.iconImageView sd_setImageWithURL:[NSURL URLWithString:model.featureImg]];
+    
+    if (model.featureImg && model.featureImg > 0) {
+        SDImageCache *imageCache = [SDImageCache sharedImageCache];
+        if ([imageCache diskImageExistsWithKey:model.featureImg]) {
+            [cell.iconImageView setImage:[imageCache imageFromDiskCacheForKey:model.featureImg]];
+        } else {
+            [cell.iconImageView sd_setImageWithURL:[NSURL URLWithString:model.featureImg] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                if (error == nil && image && model.featureImg && tableView) {
+                    [tableView beginUpdates];
+                    [tableView endUpdates];
+                }
+            }];
+        }
+    }
+    
+    
 //    [cell.iconImageView sd_setImageWithURL:[NSURL URLWithString:model..data.featureImg]];
     cell.titleLabel.text = model.title;
     NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:model.publishTime];

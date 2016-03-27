@@ -50,6 +50,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     if (self) {
         _currentTimes = 0;
         self.frame = frame;
+        self.originFrame = self.frame;
         self.backgroundColor = [UIColor grayColor];
         self.videoControl.frame = frame;
         self.videoControl.playOrPauseBtn.selected = NO;
@@ -172,7 +173,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     if (self.isFullscreenMode) {
         return;
     }
-    self.originFrame = self.frame;
+//    self.originFrame = self.frame;
     CGFloat height = [[UIScreen mainScreen] bounds].size.width;
     CGFloat width = [[UIScreen mainScreen] bounds].size.height;
     CGRect frame = CGRectMake((height - width) / 2, (width - height) / 2, width, height);;
@@ -190,11 +191,31 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
 
 - (void)shrinkScreenButtonClick
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:LMShrinkScreenPlayNotification object:nil];
-    self.videoControl.frame = self.originFrame;
-    self.isFullscreenMode = YES;
-    self.videoControl.fullScreenButton.hidden = NO;
-    self.videoControl.shrinkScreenButton.hidden = YES;
+    if (!self.isFullscreenMode) {
+        return;
+    }
+    if (_currentCell) {
+        if (self.isSmallScreen) {
+            //放widow上,小屏显示
+            [self toSmallScreen];
+        }else{
+            [self toCell:_currentCell];
+        }
+        return;
+    }
+    [self windowsShrinkScreen];
+}
+
+- (void)windowsShrinkScreen {
+    [UIView animateWithDuration:0.3f animations:^{
+        [self setTransform:CGAffineTransformIdentity];
+        self.frame = self.originFrame;
+        self.videoControl.frame = self.originFrame;
+    } completion:^(BOOL finished) {
+        self.isFullscreenMode = NO;
+        self.videoControl.fullScreenButton.hidden = NO;
+        self.videoControl.shrinkScreenButton.hidden = YES;
+    }];
 }
 
 
@@ -532,6 +553,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
 }
 
 - (void)toCell:(UITableViewCell *)cell{
+    NSLog(@"cell-%@",cell);
     [self removeFromSuperview];
     [UIView animateWithDuration:0.5f animations:^{
         self.transform = CGAffineTransformIdentity;
@@ -563,9 +585,10 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     
     [[UIApplication sharedApplication].keyWindow addSubview:self];
     
-    
+    // BUG
+//    [self.current bringSubviewToFront:self];
     //    lmPlayer.fullScreenBtn.selected = YES;
-    [self bringSubviewToFront:self.videoControl.bottomView];
+//    [self bringSubviewToFront:self.videoControl.bottomView];
     
 }
 /**
@@ -583,12 +606,16 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
             break;
         case UIInterfaceOrientationPortrait:{
             if (self.isFullscreenMode) {
-                if (self.isSmallScreen) {
-                    //放widow上,小屏显示
-                    [self toSmallScreen];
-                }else{
+                if (_currentCell) {
+                    if (self.isSmallScreen) {
+                        //放widow上,小屏显示
+                        [self toSmallScreen];
+                    }else{
                     
-                    [self toCell:_currentCell];
+                        [self toCell:_currentCell];
+                    }
+                } else {
+                    [self windowsShrinkScreen];
                 }
             }
         }

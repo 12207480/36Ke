@@ -36,7 +36,26 @@
     if (cell == nil) {
         cell = [[[NSBundle mainBundle] loadNibNamed:NSStringFromClass([KeTVCell class]) owner:nil options:nil] lastObject];
     }
-    [cell.backgroundIV sd_setImageWithURL:[NSURL URLWithString:model.tv.featureImg]];
+
+    if (model.tv.featureImg && model.tv.featureImg > 0) {
+        SDImageCache *imageCache = [SDImageCache sharedImageCache];
+        if ([imageCache diskImageExistsWithKey:model.tv.featureImg]) {
+            [cell.backgroundIV setImage:[imageCache imageFromDiskCacheForKey:model.tv.featureImg]];
+        } else {
+            
+            
+            
+           [cell.backgroundIV sd_setImageWithURL:[NSURL URLWithString:model.tv.featureImg] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+               if (error == nil && image && model.tv.featureImg && tableView) {
+                   [tableView beginUpdates];
+                   [tableView endUpdates];
+               }
+           }];
+        }
+    }
+    
+    
+//    [cell.backgroundIV sd_setImageWithURL:[NSURL URLWithString:model.tv.featureImg]];
 
     cell.duration.text = model.tv.duration;
    

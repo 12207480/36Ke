@@ -59,6 +59,7 @@
 
 
 - (void)viewDidLoad {
+    self.update = YES;
     newsHandler = [[NewsListJsonHandler alloc] init];
     newsHandler.delegate = self;
     [self setupUI];
@@ -70,7 +71,7 @@
     [self cacheHistory];
     
     // 注册全屏缩放通知
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(shrinkScreenBtnClick:) name:LMShrinkScreenPlayNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(shrinkScreenBtnClick:) name:LMShrinkScreenPlayNotification object:nil];
     
 }
 
@@ -85,40 +86,6 @@
         self.update = NO;
     }
 }
-
--(void)shrinkScreenBtnClick:(NSNotification *)notice{
-    if (lmPlayer.isSmallScreen) {
-        //放widow上,小屏显示
-        [lmPlayer toSmallScreen];
-    }else{
-        _currentCell = (KeTVCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:currentIndexPath.row inSection:0]];
-        [lmPlayer toCell:_currentCell];
-    }
-//    [self toCell];
-   
-}
--(void)toFullScreenWithInterfaceOrientation:(UIInterfaceOrientation )interfaceOrientation{
-    [lmPlayer removeFromSuperview];
-    lmPlayer.transform = CGAffineTransformIdentity;
-    if (interfaceOrientation==UIInterfaceOrientationLandscapeLeft) {
-        lmPlayer.transform = CGAffineTransformMakeRotation(-M_PI_2);
-    }else if(interfaceOrientation==UIInterfaceOrientationLandscapeRight){
-        lmPlayer.transform = CGAffineTransformMakeRotation(M_PI_2);
-    }
-    lmPlayer.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    lmPlayer.playerLayer.frame =  CGRectMake(0,0, self.view.frame.size.height,self.view.frame.size.width);
-    
-    
-    [[UIApplication sharedApplication].keyWindow addSubview:lmPlayer];
-    
-    
-//    lmPlayer.fullScreenBtn.selected = YES;
-    [lmPlayer bringSubviewToFront:lmPlayer.videoControl.bottomView];
-    
-}
-
-
-
 
 
 #pragma mark scrollView delegate
@@ -146,6 +113,7 @@
 //                    [self toCell];
                 }else{
                     _currentCell = (KeTVCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:currentIndexPath.row inSection:0]];
+                    lmPlayer.currentCell = _currentCell;
                     [lmPlayer toCell:_currentCell];
                 }
             }
@@ -175,11 +143,15 @@
                                     options: NSJSONReadingMutableContainers
                                       error: &error];
     if (history.length>0) {
+        
+        _update = NO;
+        
         self.newsArray = [KeTVData2 mj_objectArrayWithKeyValuesArray:array];
         KeTVData2 *ketvData = self.newsArray.lastObject;
         _lastId = ketvData.tv.id;
-        [self.tableView reloadData];
-
+        [self.tableView beginUpdates];
+        [self.tableView endUpdates];
+        
     }
 }
 
@@ -204,7 +176,7 @@
         return;
     }
     _ketvData2  = result.lastObject;
-        
+    _lastId = _ketvData2.tv.id;
     if (type == 1) {
         //        NSString *writeString = [NSString stringWithFormat:@"%@",self.newsArray];
         //        NSLog(@"writeString---%@",writeString);
@@ -220,6 +192,7 @@
         
         [self.tableView.mj_header endRefreshing];
         [self.tableView reloadData];
+//        [self.tableView reloadData];
     }else if(type == 2){
         [self.newsArray addObjectsFromArray:result];
         [self.tableView.mj_footer endRefreshing];
@@ -350,12 +323,14 @@
     if (lmPlayer.player) {
         [lmPlayer removeFromSuperview];
         [lmPlayer.player replaceCurrentItemWithPlayerItem:nil];
-        [lmPlayer configAvplayer:model.tv.videoSource480];
-        lmPlayer.currentCell = self.currentCell;
+        [lmPlayer configAvplayer:model.tv.videoSource360];
+        _currentCell = (KeTVCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:currentIndexPath.row inSection:0]];
+        lmPlayer.currentCell = _currentCell;
         [lmPlayer play];
         
     }else{
-        lmPlayer = [[LMVideoPlayerOperationView alloc]initWithFrame:self.currentCell.backgroundIV.bounds videoURLString:model.tv.videoSource480];
+        NSLog(@"model.tv.videoSource480---%@",model.tv.videoSource720);
+        lmPlayer = [[LMVideoPlayerOperationView alloc]initWithFrame:self.currentCell.backgroundIV.bounds videoURLString:model.tv.videoSource360];
 //        lmPlayer = [[LMVideoPlayerOperationView alloc] initWithFrame:<#(CGRect)#> videoURLString:<#(NSString *)#>]
         lmPlayer.currentCell = self.currentCell;
         [lmPlayer play];
